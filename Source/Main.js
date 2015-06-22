@@ -108,9 +108,9 @@ class Serialize{
       Value = Regex.C.exec(Item)
       Assert(Value, "Syntax Error")
       Assert.notEqual(typeof Scope[Value[1]], 'undefined', `Can't find \`${Value[1]}\` in given scope`)
-      Assert.equal(typeof Scope[Value[1]].unserialize, 'function', `Can't find unserialize function on \`${Value[1]}\``)
+      Assert.equal(typeof Scope[Value[1]].prototype.unserialize, 'function', `Can't find unserialize function on \`${Value[1]}\``)
       let Container = {}
-      Scope[Value[1]].unserialize.call(Container, Value[2])
+      Scope[Value[1]].prototype.unserialize.call(Container, Value[2])
       return {
         Index: Value.index + Value[0].length,
         Value: Container
