@@ -1,7 +1,7 @@
 "use strict"
 let Chart = {
   a: 'array',
-  b: 'boolean',
+  b: 'boolean',                               // Done
   C: 'object-serializable',
   d: 'double',
   i: 'integer',                               // Done
@@ -43,7 +43,13 @@ class Serialize{
         Index: Length + Length.toString().length + 5,
         Value: Item.substr(1, Item.length - 2).replace(/\\"/g, '"') // 2 quotes
       }
+    } else if(Type === 'b'){
+      return {
+        Value: Boolean(Item.substr(2, 1)),
+        Index: 3
+      }
     }
     return Type
   }
 }
+
