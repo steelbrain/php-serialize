@@ -3,7 +3,7 @@ let Chart = {
   a: 'array',
   b: 'boolean',                               // Done
   C: 'object-serializable',
-  d: 'double',
+  d: 'double',                                // Done
   i: 'integer',                               // Done
   N: 'null',                                  // Done
   o: 'deprecated way to encode objects',
@@ -14,7 +14,8 @@ let Chart = {
 }
 let Assert = require('assert')
 let Regex = {
-  i: /i:(.*?);/
+  i: /i:(.*?);/,
+  d: /d:(.*?);/
 }
 class Serialize{
   static serialize(){
@@ -53,7 +54,15 @@ class Serialize{
         Value: null,
         Index: 1
       }
+    } else if(Type === 'd'){
+      Value = Regex.d.exec(Item)
+      Assert(Value, "Syntax Error")
+      return {
+        Index: Value.index + Value[0].length - 1, // Length is 1-based
+        Value: parseFloat(Value[1])
+      }
     }
     return Type
   }
 }
+
