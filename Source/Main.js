@@ -2,7 +2,7 @@
 let Chart = {
   a: 'array',                                 // Done
   b: 'boolean',                               // Done
-  C: 'object-serializable',
+  C: 'object-serializable',                   // Done
   d: 'double',                                // Done
   i: 'integer',                               // Done
   N: 'null',                                  // Done
@@ -21,7 +21,7 @@ let Regex = {
   C: /C:\d+:"(.*?)":1:{(.*?)}/
 }
 class Serialize{
-  static serialize(){
+  static serialize(Item){
 
   }
   static unserialize(Item, Scope){
