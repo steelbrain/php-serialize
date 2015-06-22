@@ -17,7 +17,8 @@ let Regex = {
   i: /i:(.*?);/,
   d: /d:(.*?);/,
   O: /O:\d+:".*?":(\d+):\{(.*)\}/,
-  a: /a:(\d+):\{(.*)\}/
+  a: /a:(\d+):\{(.*)\}/,
+  C: /C:\d+:"(.*?)":1:{(.*?)}/
 }
 class Serialize{
   static serialize(){
@@ -83,6 +84,17 @@ class Serialize{
         Value: Serialize.__unserializeObject(Length, Value, []),
         Index: RegexVal.index + RegexVal[0].length
       }
+    } else if(Type === 'C'){
+      Value = Regex.C.exec(Item)
+      Assert(Value, "Syntax Error")
+      Assert.notEqual(typeof Scope[Value[1]], 'undefined', `Can't find \`${Value[1]}\` in given scope`)
+      Assert.equal(typeof Scope[Value[1]].unserialize, 'function', `Can't find unserialize function on \`${Value[1]}\``)
+      let Container = {}
+      Scope[Value[1]].unserialize.call(Container, Value[2])
+      return {
+        Index: Value.index + Value[0].length,
+        Value: Container
+      }
     }
     return Type
   }
@@ -100,3 +112,4 @@ class Serialize{
     return Container
   }
 }
+
