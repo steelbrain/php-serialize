@@ -1,17 +1,4 @@
 "use strict"
-let Chart = {
-  a: 'array',                                 // Done
-  b: 'boolean',                               // Done
-  C: 'object-serializable',                   // Done
-  d: 'double',                                // Done
-  i: 'integer',                               // Done
-  N: 'null',                                  // Done
-  o: 'deprecated way to encode objects',
-  O: 'object + class',                        // Done
-  r: 'reference',
-  R: 'pointer reference',
-  s: 'string'                                 // Done
-}
 let Assert = require('assert')
 let Regex = {
   i: /i:(.*?);/,
@@ -36,14 +23,23 @@ class Serialize{
       if(Item instanceof Array){
         ToReturn = [`a:${Item.length}:{`]
         Item.forEach(function(Value, Key){
-          ToReturn.push(Key)
-          ToReturn.push(Value)
+          ToReturn.push(Serialize.serialize(Key))
+          ToReturn.push(Serialize.serialize(Value))
         })
         ToReturn.push('}')
         return ToReturn.join('')
       } else if(typeof Item.serialize === 'function'){
         let Serialized = Item.serialize()
         return `C:${Item.constructor.name.length}:"${Item.constructor.name}":${Serialized.length}:{${Serialized}}`
+      } else {
+        ToReturn = []
+        for(let Key in Item){
+          if(Item.hasOwnProperty(Key)){
+            ToReturn.push(Serialize.serialize(Key))
+            ToReturn.push(Serialize.serialize(Item[Key]))
+          }
+        }
+        return `O:${Item.constructor.name.length}:"${Item.constructor.name}":${ToReturn.length / 2}:{${ToReturn.join('')}}`
       }
     }
     throw new TypeError
