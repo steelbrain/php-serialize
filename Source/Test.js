@@ -29,3 +29,16 @@ Assert.deepEqual(
 Assert.deepEqual(
   Serialize.unserialize(Serialize.serialize([1, 2])), [1, 2], "Works with Arrays"
 )
+
+class Test{
+  serialize(){
+    return "a"
+  }
+  unserialize(data){
+    this.a = data
+  }
+}
+
+Assert.equal(
+  Serialize.unserialize(Serialize.serialize(new Test), {Test}).a, "a", "Works with serializable objects"
+)
