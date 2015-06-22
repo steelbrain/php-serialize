@@ -47,7 +47,7 @@ class Serialize{
   static unserialize(Item, Scope){
     if(typeof Scope !== 'object') Scope = {}
     Assert.equal(typeof Item, 'string', "Serialize.unserialize expects parameter one to be string")
-    return Serialize.__unserializeItem(Item, Scope)
+    return Serialize.__unserializeItem(Item, Scope).Value
   }
   // Note: Trailing semi-colons are removed by the indexes
   static __unserializeItem(Item, Scope){
