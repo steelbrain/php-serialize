@@ -4,7 +4,7 @@ PHP-Serialize is tiny library that helpers you encode/decoded data in PHP's Seri
 
 It also supports `Serializable ` objects decode. Here's how you can use them. (Note: This example uses ES6)
 ```js
-let Serialize = require('./Main')
+let Serialize = require('php-serialize')
 class User{
   constructor(Info){
     this.Name = Info.Name
