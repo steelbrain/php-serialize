@@ -5,7 +5,7 @@ let Regex = {
   d: /d:(.*?);/,
   O: /O:\d+:".*?":(\d+):\{(.*)\}/,
   a: /a:(\d+):\{(.*)\}/,
-  C: /C:\d+:"(.*?)":1:{(.*?)}/
+  C: /C:\d+:"(.*?)":\d+:{(.*)}/
 }
 class Serialize{
   static serialize(Item){
@@ -109,8 +109,10 @@ class Serialize{
       Assert(Value, "Syntax Error")
       Assert.notEqual(typeof Scope[Value[1]], 'undefined', `Can't find \`${Value[1]}\` in given scope`)
       Assert.equal(typeof Scope[Value[1]].prototype.unserialize, 'function', `Can't find unserialize function on \`${Value[1]}\``)
-      let Container = {}
-      Scope[Value[1]].prototype.unserialize.call(Container, Value[2])
+      let Container = function(){}
+      Container.prototype = Scope[Value[1]].prototype
+      Container = new Container()
+      Container.unserialize(Value[2])
       return {
         Index: Value.index + Value[0].length,
         Value: Container
