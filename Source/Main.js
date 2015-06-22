@@ -22,7 +22,13 @@ let Regex = {
 }
 class Serialize{
   static serialize(Item){
-
+    if(Item === null){
+      return 'N;'
+    } else if(typeof Item === 'number'){
+      if(Item % 1 === 0) return `i:${Item};`
+      else return `d:${Item};`
+    }
+    throw new TypeError
   }
   static unserialize(Item, Scope){
     if(typeof Scope !== 'object') Scope = {}
@@ -96,7 +102,7 @@ class Serialize{
         Value: Container
       }
     }
-    return Type
+    throw new SyntaxError
   }
   static __unserializeObject(Length, Value, Container){
     let Temp = {Key: "", Value: ""}
