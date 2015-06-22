@@ -5,7 +5,7 @@ let Chart = {
   C: 'object-serializable',
   d: 'double',
   i: 'integer',                               // Done
-  N: 'null',
+  N: 'null',                                  // Done
   o: 'deprecated way to encode objects',
   O: 'object + class',
   r: 'reference',
@@ -48,8 +48,12 @@ class Serialize{
         Value: Boolean(Item.substr(2, 1)),
         Index: 3
       }
+    } else if(Type === 'N'){
+      return {
+        Value: null,
+        Index: 1
+      }
     }
     return Type
   }
 }
-
