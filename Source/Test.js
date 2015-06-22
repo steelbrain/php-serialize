@@ -25,3 +25,7 @@ Assert.equal(
 Assert.deepEqual(
   Serialize.unserialize(Serialize.serialize({a: "a"})), {a: "a"}, "Works with Objects"
 )
+
+Assert.deepEqual(
+  Serialize.unserialize(Serialize.serialize([1, 2])), [1, 2], "Works with Arrays"
+)
