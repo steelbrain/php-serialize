@@ -31,12 +31,18 @@ class Serialize{
     if(Type === 'i'){
       Value = Regex.i.exec(Item)
       Assert(Value, "Syntax Error")
-      return parseInt(Value[1])
+      return {
+        Index: Value.index + Value[0].length - 1, // Length is 1-based
+        Value: parseInt(Value[1])
+      }
     } else if(Type === 's'){
       Length = parseInt(Item.substr(2, 1))
       Assert(Length === Length, "Syntax Error") // NaN !== NaN
       Item = Item.substr(4, Length + 2)
-      return Item.substr(1, Item.length - 2).replace(/\\"/g, '"') // 2 quotes
+      return {
+        Index: Length + Length.toString().length + 5,
+        Value: Item.substr(1, Item.length - 2).replace(/\\"/g, '"') // 2 quotes
+      }
     }
     return Type
   }
