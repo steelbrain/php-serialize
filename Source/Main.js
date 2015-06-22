@@ -92,7 +92,7 @@ class Serialize{
       Length = parseInt(RegexVal[1]) * 2
       Value = RegexVal[2]
       return {
-        Value: Serialize.__unserializeObject(Length, Value, {}),
+        Value: Serialize.__unserializeObject(Length, Value, {}, Scope),
         Index: RegexVal.index + RegexVal[0].length
       }
     } else if(Type === 'a'){
@@ -101,7 +101,7 @@ class Serialize{
       Length = parseInt(RegexVal[1]) * 2
       Value = RegexVal[2]
       return {
-        Value: Serialize.__unserializeObject(Length, Value, []),
+        Value: Serialize.__unserializeObject(Length, Value, [], Scope),
         Index: RegexVal.index + RegexVal[0].length
       }
     } else if(Type === 'C'){
@@ -118,7 +118,7 @@ class Serialize{
     }
     throw new SyntaxError
   }
-  static __unserializeObject(Length, Value, Container){
+  static __unserializeObject(Length, Value, Container, Scope){
     let Temp = {Key: "", Value: ""}
     for(let I = 0; I < Length; ++I){
       let Entry = Serialize.__unserializeItem(Value, Scope)
