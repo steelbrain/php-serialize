@@ -1,6 +1,6 @@
 "use strict"
 let Chart = {
-  a: 'array',
+  a: 'array',                                 // Done
   b: 'boolean',                               // Done
   C: 'object-serializable',
   d: 'double',                                // Done
@@ -16,7 +16,8 @@ let Assert = require('assert')
 let Regex = {
   i: /i:(.*?);/,
   d: /d:(.*?);/,
-  O: /O:\d+:".*?":(\d+):\{(.*)\}/
+  O: /O:\d+:".*?":(\d+):\{(.*)\}/,
+  a: /a:(\d+):\{(.*)\}/
 }
 class Serialize{
   static serialize(){
@@ -65,17 +66,23 @@ class Serialize{
         Value: parseFloat(Value[1])
       }
     } else if(Type === 'O'){
-      let Container = {} // Create  container object
       let RegexVal = Regex.O.exec(Item)
       Assert(RegexVal, "Syntax Error")
       Length = parseInt(RegexVal[1]) * 2
       Value = RegexVal[2]
-      Container = Serialize.__unserializeObject(Length, Value, {})
       return {
-        Value: Container,
+        Value: Serialize.__unserializeObject(Length, Value, {}),
         Index: RegexVal.index + RegexVal[0].length
       }
-      // key1,value1,key2,value2
+    } else if(Type === 'a'){
+      let RegexVal = Regex.a.exec(Item)
+      Assert(RegexVal, "Syntax Error")
+      Length = parseInt(RegexVal[1]) * 2
+      Value = RegexVal[2]
+      return {
+        Value: Serialize.__unserializeObject(Length, Value, []),
+        Index: RegexVal.index + RegexVal[0].length
+      }
     }
     return Type
   }
@@ -83,7 +90,7 @@ class Serialize{
     let Temp = {Key: "", Value: ""}
     for(let I = 0; I < Length; ++I){
       let Entry = Serialize.__unserializeItem(Value, Scope)
-      if(Temp.Key.length){
+      if(Temp.Key){
         Temp.Value = Entry.Value
         Container[Temp.Key] = Temp.Value
         Temp = {Key: "", Value: ""}
@@ -93,4 +100,3 @@ class Serialize{
     return Container
   }
 }
-
