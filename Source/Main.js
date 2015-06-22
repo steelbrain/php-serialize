@@ -119,13 +119,13 @@ class Serialize{
     throw new SyntaxError
   }
   static __unserializeObject(Length, Value, Container, Scope){
-    let Temp = {Key: "", Value: ""}
+    let Temp = {}
     for(let I = 0; I < Length; ++I){
       let Entry = Serialize.__unserializeItem(Value, Scope)
-      if(Temp.Key){
+      if(typeof Temp.Key !== 'undefined'){
         Temp.Value = Entry.Value
         Container[Temp.Key] = Temp.Value
-        Temp = {Key: "", Value: ""}
+        Temp = {}
       } else Temp.Key = Entry.Value
       Value = Value.substr(Entry.Index)
     }
