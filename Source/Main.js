@@ -4,13 +4,13 @@ let Chart = {
   b: 'boolean',
   C: 'object-serializable',
   d: 'double',
-  i: 'integer',
+  i: 'integer',                               // Done
   N: 'null',
   o: 'deprecated way to encode objects',
   O: 'object + class',
   r: 'reference',
   R: 'pointer reference',
-  s: 'string'
+  s: 'string'                                 // Done
 }
 let Assert = require('assert')
 let Regex = {
@@ -26,13 +26,18 @@ class Serialize{
   }
   static __unserializeItem(Item){
     let Type = Item.substr(0, 1)
+    let Length
     let Value
     if(Type === 'i'){
       Value = Regex.i.exec(Item)
       Assert(Value, "Syntax Error")
       return parseInt(Value[1])
+    } else if(Type === 's'){
+      Length = parseInt(Item.substr(2, 1))
+      Assert(Length === Length, "Syntax Error") // NaN !== NaN
+      Item = Item.substr(4, Length + 2)
+      return Item.substr(1, Item.length - 2).replace(/\\"/g, '"') // 2 quotes
     }
     return Type
   }
 }
-console.log(Serialize.unserialize('i:2;'))
