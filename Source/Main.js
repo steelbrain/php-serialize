@@ -132,3 +132,5 @@ class Serialize{
     return Container
   }
 }
+
+module.exports = Serialize
