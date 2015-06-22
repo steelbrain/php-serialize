@@ -70,16 +70,7 @@ class Serialize{
       Assert(RegexVal, "Syntax Error")
       Length = parseInt(RegexVal[1]) * 2
       Value = RegexVal[2]
-      let Temp = {Key: "", Value: ""}
-      for(let I = 0; I < Length; ++I){
-        let Entry = Serialize.__unserializeItem(Value, Scope)
-        if(Temp.Key.length){
-          Temp.Value = Entry.Value
-          Container[Temp.Key] = Temp.Value
-          Temp = {Key: "", Value: ""}
-        } else Temp.Key = Entry.Value
-        Value = Value.substr(Entry.Index)
-      }
+      Container = Serialize.__unserializeObject(Length, Value, {})
       return {
         Value: Container,
         Index: RegexVal.index + RegexVal[0].length
@@ -87,6 +78,19 @@ class Serialize{
       // key1,value1,key2,value2
     }
     return Type
+  }
+  static __unserializeObject(Length, Value, Container){
+    let Temp = {Key: "", Value: ""}
+    for(let I = 0; I < Length; ++I){
+      let Entry = Serialize.__unserializeItem(Value, Scope)
+      if(Temp.Key.length){
+        Temp.Value = Entry.Value
+        Container[Temp.Key] = Temp.Value
+        Temp = {Key: "", Value: ""}
+      } else Temp.Key = Entry.Value
+      Value = Value.substr(Entry.Index)
+    }
+    return Container
   }
 }
 
