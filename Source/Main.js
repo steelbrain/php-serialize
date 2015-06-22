@@ -27,6 +27,24 @@ class Serialize{
     } else if(typeof Item === 'number'){
       if(Item % 1 === 0) return `i:${Item};`
       else return `d:${Item};`
+    } else if(typeof Item === 'string'){
+      return `s:${Item.length}:"${Item}";`
+    } else if(typeof Item === 'boolean'){
+      return `b:${Item ? '1' : '0'};`
+    } else if(typeof Item === 'object'){
+      let ToReturn
+      if(Item instanceof Array){
+        ToReturn = [`a:${Item.length}:{`]
+        Item.forEach(function(Value, Key){
+          ToReturn.push(Key)
+          ToReturn.push(Value)
+        })
+        ToReturn.push('}')
+        return ToReturn.join('')
+      } else if(typeof Item.serialize === 'function'){
+        let Serialized = Item.serialize()
+        return `C:${Item.constructor.name.length}:"${Item.constructor.name}":${Serialized.length}:{${Serialized}}`
+      }
     }
     throw new TypeError
   }
@@ -118,4 +136,3 @@ class Serialize{
     return Container
   }
 }
-
