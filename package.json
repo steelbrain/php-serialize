@@ -1,6 +1,6 @@
 {
   "name": "php-serialize",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "PHP Serialize/Unserialize in Javascript",
   "main": "Source/Main",
   "scripts": {
