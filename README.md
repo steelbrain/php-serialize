@@ -1,35 +1,36 @@
 PHP-Serialize
 ===========
-PHP-Serialize is tiny library that helpers you encode/decoded data in PHP's Serialization format.
+PHP-Serialize is node library that helpers you encode/decoded data in PHP's Serialization format.
 
-It also supports `Serializable ` objects decode. Here's how you can use them. (Note: This example uses ES6)
+It also supports `Serializable ` objects decode. Here's how you can use them.
+
 ```js
-let Serialize = require('php-serialize')
-class User{
-  constructor(Info){
-    this.Name = Info.Name
-    this.Age = Info.Age
+const Serialize = require('php-serialize')
+class User {
+  constructor({ name, age }){
+    this.name = name
+    this.age = age
   }
   serialize(){
-    return JSON.stringify({Name: this.Name, Age: this.Age})
+    return JSON.stringify({ name: this.name, age: this.age })
   }
-  unserialize(Data){
-    Data = JSON.parse(Data)
-    this.Name = Data.Name
-    this.Age = Data.Age
+  unserialize(rawData){
+    const { name, age } = JSON.parse(rawData)
+    this.name = name
+    this.age = age
   }
 }
-let Steel = new User({Name: "Steel Brain", Age: 16})
-let Serialized = Serialize.serialize(Steel)
-let Unserialized = Serialize.unserialize(Serialized, {User: User}) // Passing available classes
+const steel = new User({ name: "Steel Brain", age: 17 })
+const Serialized = Serialize.serialize(steel)
+const Unserialized = Serialize.unserialize(Serialized, {User: User}) // Passing available classes
 console.log(Unserialized instanceof User) // true
 ```
 
 #### API
 ```js
-class Serializable{
-  serialize(Item): string
-  unserialize(Item, Scope = {})
+class Serializable {
+  serialize(item: any): string
+  unserialize(item: string, scope: Object = {}): any
 }
 ```
 
