@@ -4,7 +4,8 @@
   "description": "PHP serialize/unserialize in Javascript",
   "main": "lib/index.js",
   "scripts": {
-    "test": "apm test"
+    "test": "apm test",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
