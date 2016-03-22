@@ -5,7 +5,8 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "apm test",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "compile": "ucompiler go"
   },
   "repository": {
     "type": "git",
