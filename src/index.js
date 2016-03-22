@@ -22,11 +22,16 @@ function serialize(item: any): string {
   if (type !== 'object') {
     throw new TypeError()
   }
-  if (Array.isArray(item)) {
+
+  const isArray = Array.isArray(item)
+  if (isArray || item.constructor.name === 'Object') {
+    // Array or raw object
     const toReturn = [`a:${item.length}{`]
-    for (let i = 0; i < item.length; ++i) {
-      const value = item[i]
-      toReturn.push(serialize(i), serialize(value))
+    for (const key in item) {
+      if (item.hasOwnProperty(key) && (key !== 'length' || isArray)) {
+        const value = item[key]
+        toReturn.push(serialize(key), serialize(value))
+      }
     }
     toReturn.push('}')
     return toReturn.join('')
