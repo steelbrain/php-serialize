@@ -26,13 +26,17 @@ function serialize(item: any): string {
   const isArray = Array.isArray(item)
   if (isArray || item.constructor.name === 'Object') {
     // Array or raw object
-    const toReturn = [`a:${item.length}{`]
+    const toReturn = []
+    let size = 0
     for (const key in item) {
       if (item.hasOwnProperty(key) && (key !== 'length' || isArray)) {
+        size++
         const value = item[key]
-        toReturn.push(serialize(key), serialize(value))
+        const saneKey = isArray ? parseInt(key, 10) : key
+        toReturn.push(serialize(saneKey), serialize(value))
       }
     }
+    toReturn.unshift(`a:${size}:{`)
     toReturn.push('}')
     return toReturn.join('')
   }
