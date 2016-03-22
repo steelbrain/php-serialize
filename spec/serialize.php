@@ -15,7 +15,7 @@ class TestTwo {
 debug(null);
 debug(1);
 debug(1.1);
-debug([1, 2, 3, 4, 5]);
-debug(['hey' => 'hi']);
+debug(array(1, 2, 3, 4, 5));
+debug(array('hey' => 'hi'));
 debug(new Test());
 debug(new TestTwo());
