@@ -2,7 +2,7 @@
   "name": "php-serialize",
   "version": "1.0.0",
   "description": "PHP serialize/unserialize in Javascript",
-  "main": "lib/main.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "apm test"
   },
@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/steelbrain/php-serialize#readme",
   "devDependencies": {
-    "babel-preset-steelbrain": "^2.0.1"
+    "babel-eslint": "^5.0.0",
+    "babel-preset-steelbrain": "^2.0.1",
+    "eslint": "^2.2.0",
+    "eslint-config-airbnb": "^6.1.0",
+    "eslint-plugin-react": "^4.2.3"
   }
 }
