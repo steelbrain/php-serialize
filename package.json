@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/steelbrain/php-serialize/issues"
   },
-  "homepage": "https://github.com/steelbrain/php-serialize#readme"
+  "homepage": "https://github.com/steelbrain/php-serialize#readme",
+  "devDependencies": {
+    "babel-preset-steelbrain": "^2.0.1"
+  }
 }
