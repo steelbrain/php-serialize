@@ -11,6 +11,15 @@ class Test implements Serializable {
 class TestTwo {
 
 }
+class TestParent implements Serializable {
+  function serialize() {
+    return serialize(array(
+      new Test(),
+      new TestTwo()
+    ));
+  }
+  function unserialize($item) {}
+}
 
 debug(null);
 debug(1);
@@ -19,3 +28,4 @@ debug(array(1, 2, 3, 4, 5));
 debug(array('hey' => 'hi'));
 debug(new Test());
 debug(new TestTwo());
+debug(new TestParent());
