@@ -32,3 +32,11 @@ npm run watch
 This project uses [`Atom`](https://atom.io) as the base for it's Tests. Please have a look at [`Writing Specs` in Atom Flight Manual](http://flight-manual.atom.io/hacking-atom/sections/writing-specs/) to get an understanding of the basics.
 
 Atom Spec runner uses [Jasmine `1.3.x`](http://jasmine.github.io/1.3/introduction.html), please read their docs about it's APIs.
+
+### Linting
+
+This project uses [`ESLint`](http://eslint.org/) as it's linter. To execute the linter, use the `lint` npm script.
+
+```sh
+npm run lint
+```
