@@ -73,7 +73,7 @@ describe('unserialize', function() {
         this._class = new ChildClass('Brain')
       }
       serialize() {
-        return serialize([ this._object, this._class ])
+        return serialize([this._object, this._class])
       }
       unserialize(stuff) {
         const array = unserialize(stuff, SCOPE)
