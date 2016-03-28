@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/steelbrain/php-serialize#readme",
   "devDependencies": {
-    "babel-eslint": "^5.0.0",
+    "babel-eslint": "^6.0.0",
     "babel-preset-steelbrain": "^2.0.1",
     "eslint": "~2.2.0",
     "eslint-config-airbnb": "^6.1.0",
