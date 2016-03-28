@@ -6,7 +6,8 @@
   "scripts": {
     "test": "apm test",
     "lint": "eslint .",
-    "compile": "ucompiler go"
+    "compile": "ucompiler go",
+    "watch": "ucompiler watch"
   },
   "repository": {
     "type": "git",
