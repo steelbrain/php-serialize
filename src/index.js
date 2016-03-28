@@ -5,8 +5,8 @@ import assert from 'assert'
 const REGEX = {
   i: /i:([\d]+);/,
   d: /d:([\d\.]+);/,
-  C: /C:[\d]+:"([\S ]+)":([\d]+):/,
-  O: /O:[\d]+:"([\S ]+)":([\d]+):/
+  C: /C:[\d]+:"([\S ]+?)":([\d]+):/,
+  O: /O:[\d]+:"([\S ]+?)":([\d]+):/
 }
 
 function getClass(prototype: Object) {

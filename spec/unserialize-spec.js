@@ -49,4 +49,39 @@ describe('unserialize', function() {
     }
     testOutput(new User(), { User })
   })
+  it('works with nested serializable classes too', function() {
+    let SCOPE
+    class ChildObject {
+      constructor(name) {
+        this.name = name
+      }
+    }
+    class ChildClass {
+      constructor(name) {
+        this.name = name
+      }
+      serialize() {
+        return this.name
+      }
+      unserialize(stuff) {
+        this.name = stuff
+      }
+    }
+    class Parent {
+      constructor() {
+        this._object = new ChildObject('Steel')
+        this._class = new ChildClass('Brain')
+      }
+      serialize() {
+        return serialize([ this._object, this._class ])
+      }
+      unserialize(stuff) {
+        const array = unserialize(stuff, SCOPE)
+        this._object = array[0]
+        this._class = array[1]
+      }
+    }
+    SCOPE = { Parent, ChildObject, ChildClass }
+    testOutput(new Parent(), SCOPE)
+  })
 })

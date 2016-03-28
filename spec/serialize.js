@@ -16,6 +16,14 @@ module.exports = function() {
   class TestTwo {
 
   }
+  class TestParent {
+    serialize() {
+      return serialize([
+        new Test(),
+        new TestTwo()
+      ])
+    }
+  }
 
   debug(null)
   debug(1)
@@ -24,6 +32,7 @@ module.exports = function() {
   debug({ hey: 'hi' })
   debug(new Test())
   debug(new TestTwo())
+  debug(new TestParent())
 
   return items.join('\n')
 }
