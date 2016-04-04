@@ -50,7 +50,6 @@ describe('unserialize', function() {
     testOutput(new User(), { User })
   })
   it('works with nested serializable classes too', function() {
-    let SCOPE
     class ChildObject {
       constructor(name) {
         this.name = name
@@ -81,7 +80,7 @@ describe('unserialize', function() {
         this._class = array[1]
       }
     }
-    SCOPE = { Parent, ChildObject, ChildClass }
+    const SCOPE = { Parent, ChildObject, ChildClass }
     testOutput(new Parent(), SCOPE)
   })
 })
