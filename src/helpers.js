@@ -10,9 +10,10 @@ class __PHP_Incomplete_Class {
   }
 }
 
-export function getClass(prototype: Object) {
+export function getClass(prototype: Object, name: string) {
   function Container() { }
   Container.prototype = prototype
+  Container.name = name
   return Container
 }
 

@@ -1,6 +1,6 @@
 'use babel'
 
-import { serialize } from '../'
+import { serialize, unserialize } from '../'
 
 module.exports = function() {
   const items = []
@@ -34,5 +34,5 @@ module.exports = function() {
   debug(new TestTwo())
   debug(new TestParent())
 
-  return items.join('\n')
+  return items
 }
