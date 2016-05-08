@@ -104,7 +104,7 @@ function unserializeItem(item: string, scope: Object, options: Options): { index
     } else {
       assert(typeof scope[className].prototype.unserialize === 'function',
         `${className}.prototype.unserialize is not a function`)
-      container = new (getClass(scope[className].prototype, className))()
+      container = new (getClass(scope[className].prototype))()
       container.unserialize(classContent)
     }
     return { index: contentOffset + contentLength + 1, value: container }
@@ -139,7 +139,7 @@ function unserializeItem(item: string, scope: Object, options: Options): { index
       }
       container = getIncompleteClass(className)
     } else {
-      container = new (getClass(scope[className].prototype, className))()
+      container = new (getClass(scope[className].prototype))()
     }
     const index = unserializeObject(contentLength, item.slice(contentOffset), scope, function(key, value) {
       container[key] = value

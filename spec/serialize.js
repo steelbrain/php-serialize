@@ -1,6 +1,6 @@
 'use babel'
 
-import { serialize, unserialize } from '../'
+import { serialize } from '../'
 
 module.exports = function() {
   const items = []
