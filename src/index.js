@@ -1,7 +1,7 @@
 /* @flow */
 
 import assert from 'assert'
-import { getClass } from './helpers'
+import { getClass, getIncompleteClass } from './helpers'
 
 const REGEX = {
   i: /i:([\d]+);/,
@@ -122,8 +122,16 @@ function unserializeItem(item: string, scope: Object, options: Options): { index
     const className = info[1]
     const contentLength = parseInt(info[2], 10)
     const contentOffset = info.index + info[0].length + 1
-    assert(typeof scope[className] !== 'undefined', `Class ${className} not found in given scope`)
-    const container = new (getClass(scope[className].prototype))()
+    const classReference = scope[className]
+    let container
+    if (!classReference) {
+      if (options.strict) {
+        assert(false, `Class ${className} not found in given scope`)
+      }
+      container = getIncompleteClass(className)
+    } else {
+      container = new (getClass(scope[className].prototype))()
+    }
     const index = unserializeObject(contentLength, item.slice(contentOffset), scope, function(key, value) {
       container[key] = value
     }, options)
