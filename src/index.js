@@ -1,18 +1,13 @@
 /* @flow */
 
 import assert from 'assert'
+import { getClass } from './helpers'
 
 const REGEX = {
   i: /i:([\d]+);/,
   d: /d:([\d\.]+);/,
   C: /C:[\d]+:"([\S ]+?)":([\d]+):/,
   O: /O:[\d]+:"([\S ]+?)":([\d]+):/
-}
-
-function getClass(prototype: Object) {
-  function Container() { }
-  Container.prototype = prototype
-  return Container
 }
 
 function serialize(item: any): string {
