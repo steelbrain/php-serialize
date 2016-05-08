@@ -1,3 +1,7 @@
+## 1.2.0
+
+- Add support for `__PHP_Incomplete_Class`
+
 ## 1.1.1
 
 - Add support for deep serialization (Thanks @cantremember)
