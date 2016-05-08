@@ -10,7 +10,7 @@ const REGEX = {
   O: /O:[\d]+:"([\S ]+?)":([\d]+):/
 }
 type Options = {
-  strict?: boolean
+  strict: boolean
 }
 
 function serialize(item: any): string {
@@ -57,6 +57,7 @@ function serialize(item: any): string {
     return `C:${item.constructor.name.length}:"${item.constructor.name}":${serialized.length}:{${serialized}}`
   }
   const items = []
+  const constructorName = item.__PHP_Incomplete_Class_Name || item.constructor.name.length
   for (const key in item) {
     if (item.hasOwnProperty(key) && typeof item[key] !== 'function') {
       const value = item[key]
@@ -64,7 +65,7 @@ function serialize(item: any): string {
       items.push(serialize(value))
     }
   }
-  return `O:${item.constructor.name.length}:"${item.constructor.name}":${items.length / 2}:{${items.join('')}}`
+  return `O:${constructorName}:"${item.constructor.name}":${items.length / 2}:{${items.join('')}}`
 }
 
 function unserializeItem(item: string, scope: Object, options: Options): { index: number, value: any } {
@@ -93,11 +94,19 @@ function unserializeItem(item: string, scope: Object, options: Options): { index
     const contentLength = parseInt(info[2], 10)
     const contentOffset = info.index + info[0].length + 1
     const classContent = item.slice(contentOffset, contentOffset + contentLength)
-    assert(typeof scope[className] !== 'undefined', `Class ${className} not found in given scope`)
-    assert(typeof scope[className].prototype.unserialize === 'function',
-      `${className}.prototype.unserialize is not a function`)
-    const container = new (getClass(scope[className].prototype))()
-    container.unserialize(classContent)
+    const classReference = scope[className]
+    let container
+    if (!classReference) {
+      if (options.strict) {
+        assert(false, `Class ${className} not found in given scope`)
+      }
+      container = getIncompleteClass(className)
+    } else {
+      assert(typeof scope[className].prototype.unserialize === 'function',
+        `${className}.prototype.unserialize is not a function`)
+      container = new (getClass(scope[className].prototype))()
+      container.unserialize(classContent)
+    }
     return { index: contentOffset + contentLength + 1, value: container }
   }
   if (type === 'a') {
@@ -158,6 +167,9 @@ function unserializeObject(count: number, content: string, scope: Object, valueC
 }
 
 function unserialize(item: string, scope: Object = {}, options: Options = {}): any {
+  if (typeof options.strict === 'undefined') {
+    options.strict = true
+  }
   return unserializeItem(item, scope, options).value
 }
 
