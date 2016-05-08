@@ -34,5 +34,5 @@ module.exports = function() {
   debug(new TestTwo())
   debug(new TestParent())
 
-  return items.join('\n')
+  return items
 }

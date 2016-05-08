@@ -1,6 +1,7 @@
 /* @flow */
 
 import assert from 'assert'
+import { getClass, getIncompleteClass } from './helpers'
 
 const REGEX = {
   i: /i:([\d]+);/,
@@ -8,11 +9,8 @@ const REGEX = {
   C: /C:[\d]+:"([\S ]+?)":([\d]+):/,
   O: /O:[\d]+:"([\S ]+?)":([\d]+):/
 }
-
-function getClass(prototype: Object) {
-  function Container() { }
-  Container.prototype = prototype
-  return Container
+type Options = {
+  strict: boolean
 }
 
 function serialize(item: any): string {
@@ -59,6 +57,7 @@ function serialize(item: any): string {
     return `C:${item.constructor.name.length}:"${item.constructor.name}":${serialized.length}:{${serialized}}`
   }
   const items = []
+  const constructorName = item.__PHP_Incomplete_Class_Name || item.constructor.name.length
   for (const key in item) {
     if (item.hasOwnProperty(key) && typeof item[key] !== 'function') {
       const value = item[key]
@@ -66,10 +65,10 @@ function serialize(item: any): string {
       items.push(serialize(value))
     }
   }
-  return `O:${item.constructor.name.length}:"${item.constructor.name}":${items.length / 2}:{${items.join('')}}`
+  return `O:${constructorName}:"${item.constructor.name}":${items.length / 2}:{${items.join('')}}`
 }
 
-function unserializeItem(item: string, scope: Object): { index: number, value: any } {
+function unserializeItem(item: string, scope: Object, options: Options): { index: number, value: any } {
   const type = item.substr(0, 1)
   if (type === 'i' || type === 'd') {
     const match = REGEX[type].exec(item)
@@ -95,11 +94,19 @@ function unserializeItem(item: string, scope: Object): { index: number, value: a
     const contentLength = parseInt(info[2], 10)
     const contentOffset = info.index + info[0].length + 1
     const classContent = item.slice(contentOffset, contentOffset + contentLength)
-    assert(typeof scope[className] !== 'undefined', `Class ${className} not found in given scope`)
-    assert(typeof scope[className].prototype.unserialize === 'function',
-      `${className}.prototype.unserialize is not a function`)
-    const container = new (getClass(scope[className].prototype))()
-    container.unserialize(classContent)
+    const classReference = scope[className]
+    let container
+    if (!classReference) {
+      if (options.strict) {
+        assert(false, `Class ${className} not found in given scope`)
+      }
+      container = getIncompleteClass(className)
+    } else {
+      assert(typeof scope[className].prototype.unserialize === 'function',
+        `${className}.prototype.unserialize is not a function`)
+      container = new (getClass(scope[className].prototype))()
+      container.unserialize(classContent)
+    }
     return { index: contentOffset + contentLength + 1, value: container }
   }
   if (type === 'a') {
@@ -115,7 +122,7 @@ function unserializeItem(item: string, scope: Object): { index: number, value: a
       if (container.constructor.name === 'Array') {
         container.push(value)
       } else container[key] = value
-    })
+    }, options)
     return { index: 4 + (lengthEnd - 2) + index + 1, value: container }
   }
   if (type === 'O') {
@@ -124,22 +131,30 @@ function unserializeItem(item: string, scope: Object): { index: number, value: a
     const className = info[1]
     const contentLength = parseInt(info[2], 10)
     const contentOffset = info.index + info[0].length + 1
-    assert(typeof scope[className] !== 'undefined', `Class ${className} not found in given scope`)
-    const container = new (getClass(scope[className].prototype))()
+    const classReference = scope[className]
+    let container
+    if (!classReference) {
+      if (options.strict) {
+        assert(false, `Class ${className} not found in given scope`)
+      }
+      container = getIncompleteClass(className)
+    } else {
+      container = new (getClass(scope[className].prototype))()
+    }
     const index = unserializeObject(contentLength, item.slice(contentOffset), scope, function(key, value) {
       container[key] = value
-    })
+    }, options)
     return { index: contentOffset + index + 1, value: container }
   }
   throw new SyntaxError()
 }
 
-function unserializeObject(count: number, content: string, scope: Object, valueCallback: Function): number {
+function unserializeObject(count: number, content: string, scope: Object, valueCallback: Function, options: Options): number {
   const realCount = count * 2
   let index = 0
   let key = null
   for (let i = 0; i < realCount; ++i) {
-    const item = unserializeItem(content.slice(index), scope)
+    const item = unserializeItem(content.slice(index), scope, options)
     if (key !== null) {
       valueCallback(key, item.value)
       key = null
@@ -151,8 +166,11 @@ function unserializeObject(count: number, content: string, scope: Object, valueC
   return index
 }
 
-function unserialize(item: string, scope: Object = {}): any {
-  return unserializeItem(item, scope).value
+function unserialize(item: string, scope: Object = {}, options: Object = {}): any {
+  if (typeof options.strict === 'undefined') {
+    options.strict = true
+  }
+  return unserializeItem(item, scope, options).value
 }
 
 module.exports = { serialize, unserialize }

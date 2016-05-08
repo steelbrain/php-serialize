@@ -30,7 +30,7 @@ console.log(Unserialized instanceof User) // true
 ```js
 class Serializable {
   serialize(item: any): string
-  unserialize(item: string, scope: Object = {}): any
+  unserialize(item: string, scope: Object = {}, options: { strict: boolean } = { strict: false }): any
 }
 ```
 
