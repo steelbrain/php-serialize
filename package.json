@@ -22,7 +22,7 @@
   "devDependencies": {
     "babel-eslint": "^6.0.0",
     "babel-preset-steelbrain": "^2.0.1",
-    "eslint": "~2.7.0",
+    "eslint": "~2.10.1",
     "eslint-config-airbnb": "^6.1.0",
     "eslint-plugin-react": "^4.2.3",
     "sb-exec": "^2.0.1",
