@@ -1,22 +1,8 @@
 {
-  "parser": "babel-eslint",
-  "extends": "airbnb/base",
+  "extends": "steelbrain",
   "rules": {
-    "semi": [2, "never"],
-    "prefer-arrow-callback": 0,
-    "space-before-function-paren": [2, "never"],
-    "func-names": 0,
-    "no-param-reassign": 0,
-    "comma-dangle": [2, "never"],
-    "max-len": [1, 150],
-    "no-console": 0,
-    "prefer-template": 0,
-    "no-nested-ternary": 0,
-    "no-multi-spaces": 0,
-    "no-use-before-define": 0,
-    "camelcase": 0
-  },
-  "globals": {
-    "atom": true
+    "no-underscore-dangle": 0,
+    "no-restricted-syntax": 0,
+    "no-use-before-define": 0
   }
 }

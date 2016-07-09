@@ -1,6 +1,6 @@
-'use strict'
-
 /* @flow */
+
+/* eslint-disable camelcase */
 
 class __PHP_Incomplete_Class {
   __PHP_Incomplete_Class_Name: string;

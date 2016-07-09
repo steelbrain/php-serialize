@@ -7,8 +7,9 @@ const REGEX = {
   i: /i:([\d]+);/,
   d: /d:([\d\.]+);/,
   C: /C:[\d]+:"([\S ]+?)":([\d]+):/,
-  O: /O:[\d]+:"([\S ]+?)":([\d]+):/
+  O: /O:[\d]+:"([\S ]+?)":([\d]+):/,
 }
+
 type Options = {
   strict: boolean
 }
@@ -40,7 +41,7 @@ function serialize(item: any): string {
     const toReturn = []
     let size = 0
     for (const key in item) {
-      if (item.hasOwnProperty(key) && (key !== 'length' || isArray)) {
+      if ({}.hasOwnProperty.call(item, key) && (key !== 'length' || isArray)) {
         size++
         const value = item[key]
         const saneKey = isArray ? parseInt(key, 10) : key
@@ -59,7 +60,7 @@ function serialize(item: any): string {
   const items = []
   const constructorName = item.__PHP_Incomplete_Class_Name || item.constructor.name.length
   for (const key in item) {
-    if (item.hasOwnProperty(key) && typeof item[key] !== 'function') {
+    if ({}.hasOwnProperty.call(item, key) && typeof item[key] !== 'function') {
       const value = item[key]
       items.push(serialize(key))
       items.push(serialize(value))
@@ -166,7 +167,8 @@ function unserializeObject(count: number, content: string, scope: Object, valueC
   return index
 }
 
-function unserialize(item: string, scope: Object = {}, options: Object = {}): any {
+function unserialize(item: string, scope: Object = {}, givenOptions: Object = {}): any {
+  const options = Object.assign({}, givenOptions)
   if (typeof options.strict === 'undefined') {
     options.strict = true
   }
