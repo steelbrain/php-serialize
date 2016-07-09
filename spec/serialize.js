@@ -20,7 +20,7 @@ module.exports = function() {
     serialize() {
       return serialize([
         new Test(),
-        new TestTwo()
+        new TestTwo(),
       ])
     }
   }
