@@ -1,3 +1,7 @@
+## 1.2.1
+
+- Fix a bug where objects/Array guessing would fail when values were/not numeric.
+
 ## 1.2.0
 
 - Add support for `__PHP_Incomplete_Class`
