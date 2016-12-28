@@ -117,7 +117,7 @@ function unserializeItem(item: string, scope: Object, options: Options): { index
     const length = parseInt(item.slice(2, lengthEnd), 10) || 0
     const index = unserializeObject(length, item.slice(4 + (lengthEnd - 2)), scope, function(key, value) {
       if (first) {
-        container = parseInt(value, 10) === parseInt(value, 10) ? [] : {}
+        container = parseInt(key, 10) === 0 ? [] : {}
         first = false
       }
       if (container.constructor.name === 'Array') {
