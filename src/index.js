@@ -14,6 +14,13 @@ type Options = {
   strict: boolean
 }
 
+// Get string length.
+function getStrLeng(str) {
+  let buffer = new Buffer(str)
+  return buffer.length;
+}
+
+
 function serialize(item: any): string {
   const type = typeof item
   if (item === null) {
@@ -26,7 +33,7 @@ function serialize(item: any): string {
     return `d:${item};`
   }
   if (type === 'string') {
-    return `s:${item.length}:"${item}";`
+     return `s:${getStrLeng(item)}:"${item}";`
   }
   if (type === 'boolean') {
     return `b:${item ? '1' : '0'};`
