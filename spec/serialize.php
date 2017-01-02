@@ -24,6 +24,7 @@ class TestParent implements Serializable {
 debug(null);
 debug(1);
 debug(1.1);
+debug('你好世界');
 debug(array(1, 2, 3, 4, 5));
 debug(array('hey' => 'hi'));
 debug(array('key' => 'value', 'key2' => 1));

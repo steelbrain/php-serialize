@@ -29,6 +29,7 @@ module.exports = function() {
   debug(1)
   debug(1.1)
   debug([1, 2, 3, 4, 5])
+  debug('你好世界')
   debug({ hey: 'hi' })
   debug({ key: 'value', key2: 1 })
   debug({ key: 1, key2: 'value2' })
