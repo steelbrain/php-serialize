@@ -1,7 +1,7 @@
 /* @flow */
 
 import assert from 'assert'
-import { getClass, getIncompleteClass } from './helpers'
+import { getByteLength, getClass, getIncompleteClass } from './helpers'
 
 const REGEX = {
   i: /i:([\d]+);/,
@@ -13,13 +13,6 @@ const REGEX = {
 type Options = {
   strict: boolean
 }
-
-// Get string length.
-function getStrLeng(str) {
-  let buffer = new Buffer(str)
-  return buffer.length;
-}
-
 
 function serialize(item: any): string {
   const type = typeof item
@@ -33,7 +26,7 @@ function serialize(item: any): string {
     return `d:${item};`
   }
   if (type === 'string') {
-     return `s:${getStrLeng(item)}:"${item}";`
+    return `s:${getByteLength(item)}:"${item}";`
   }
   if (type === 'boolean') {
     return `b:${item ? '1' : '0'};`

@@ -19,3 +19,10 @@ export function getClass(prototype: Object) {
 export function getIncompleteClass(name: string) {
   return new __PHP_Incomplete_Class(name)
 }
+
+export function getByteLength(contents: string): number {
+  if (typeof Buffer !== 'undefined') {
+    return Buffer.byteLength(contents, 'utf8')
+  }
+  return encodeURIComponent(contents).replace(/%[A-F\d]{2}/g, 'U').length
+}
