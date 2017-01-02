@@ -85,7 +85,8 @@ function unserializeItem(item: string, scope: Object, options: Options): { index
   if (type === 's') {
     const lengthEnd = item.indexOf(':', 2)
     const length = parseInt(item.slice(2, lengthEnd), 10) || 0
-    const sliced = item.substr(4 + (lengthEnd - 2), length)
+    const startIndex = 4 + (lengthEnd - 2)
+    const sliced = Buffer.from(item).slice(startIndex, startIndex + length).toString()
     return { index: 4 + lengthEnd + length, value: sliced }
   }
   if (type === 'C') {

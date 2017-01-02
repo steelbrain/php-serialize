@@ -99,4 +99,7 @@ describe('unserialize', function() {
     expect(unserialized.__PHP_Incomplete_Class_Name).toBe('TestParent')
     expect(unserialized.a).toBe(10)
   })
+  it('can work with multi-byte strings', function() {
+    testOutput('你好世界')
+  })
 })
