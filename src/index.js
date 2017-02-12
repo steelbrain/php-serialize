@@ -113,25 +113,21 @@ function unserializeItem(item: string, scope: Object, options: Options): { index
   }
   if (type === 'a') {
     let first = true
+    let index = 0
     let container
     const lengthEnd = item.indexOf(':', 2)
     const length = parseInt(item.slice(2, lengthEnd), 10) || 0
-    let index = 0;
-
-      if (length) {
-          index = unserializeObject(length, item.slice(4 + (lengthEnd - 2)), scope, function (key, value) {
-              if (first) {
-                  container = parseInt(key, 10) === 0 ? [] : {};
-                  first = false;
-              }
-              if (container.constructor.name === 'Array') {
-                  container.push(value);
-              } else container[key] = value;
-          }, options);
-      } else {
-          container = [];
-      }
-
+    if (length !== 0) {
+      index = unserializeObject(length, item.slice(4 + (lengthEnd - 2)), scope, function(key, value) {
+        if (first) {
+          container = parseInt(key, 10) === 0 ? [] : {}
+          first = false
+        }
+        if (container.constructor.name === 'Array') {
+          container.push(value)
+        } else container[key] = value
+      }, options)
+    } else container = []
     return { index: 4 + (lengthEnd - 2) + index + 1, value: container }
   }
   if (type === 'O') {
@@ -141,7 +137,7 @@ function unserializeItem(item: string, scope: Object, options: Options): { index
     const contentLength = parseInt(info[2], 10)
     const contentOffset = info.index + info[0].length + 1
     const classReference = scope[className]
-    let container
+    let container: Object
     if (!classReference) {
       if (options.strict) {
         assert(false, `Class ${className} not found in given scope`)
