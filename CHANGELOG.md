@@ -1,3 +1,7 @@
+## 1.2.4
+
+- Move `flow-bin` to dev dependencies from dependencies (sorry guys!)
+
 ## 1.2.3
 
 - Fix decoding of empty arrays (Thanks @incadawr)
