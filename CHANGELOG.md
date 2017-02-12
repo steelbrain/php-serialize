@@ -1,3 +1,7 @@
+## 1.2.3
+
+- Fix decoding of empty arrays (Thanks @incadawr)
+
 ## 1.2.2
 
 - Fix encoding/decoding of multi-byte utf8 strings
