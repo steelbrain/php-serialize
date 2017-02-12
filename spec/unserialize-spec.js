@@ -21,7 +21,8 @@ describe('unserialize', function() {
     testOutput(false)
     testOutput([1, 2, 3])
     testOutput({ some: 'thing', hello: 'buddy', someWeirdCoolLongKey: 'SomeWeirdCoolLongValue' })
-    testOutput({ some: { hey: 'Hello' } })
+    testOutput({ some: { hey: 'Hello' } });
+    testOutput([])
   })
   it('works well with serialiables too', function() {
     class User {
