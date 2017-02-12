@@ -5,7 +5,7 @@ import { getByteLength, getClass, getIncompleteClass } from './helpers'
 
 const REGEX = {
   i: /i:([\d]+);/,
-  d: /d:([\d\.]+);/,
+  d: /d:([\d.]+);/,
   C: /C:[\d]+:"([\S ]+?)":([\d]+):/,
   O: /O:[\d]+:"([\S ]+?)":([\d]+):/,
 }
@@ -116,15 +116,22 @@ function unserializeItem(item: string, scope: Object, options: Options): { index
     let container
     const lengthEnd = item.indexOf(':', 2)
     const length = parseInt(item.slice(2, lengthEnd), 10) || 0
-    const index = unserializeObject(length, item.slice(4 + (lengthEnd - 2)), scope, function(key, value) {
-      if (first) {
-        container = parseInt(key, 10) === 0 ? [] : {}
-        first = false
+    let index = 0;
+
+      if (length) {
+          index = unserializeObject(length, item.slice(4 + (lengthEnd - 2)), scope, function (key, value) {
+              if (first) {
+                  container = parseInt(key, 10) === 0 ? [] : {};
+                  first = false;
+              }
+              if (container.constructor.name === 'Array') {
+                  container.push(value);
+              } else container[key] = value;
+          }, options);
+      } else {
+          container = [];
       }
-      if (container.constructor.name === 'Array') {
-        container.push(value)
-      } else container[key] = value
-    }, options)
+
     return { index: 4 + (lengthEnd - 2) + index + 1, value: container }
   }
   if (type === 'O') {
