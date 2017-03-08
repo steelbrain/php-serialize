@@ -67,7 +67,6 @@ function unserializeItem(item: Buffer, startIndex: number, scope: Object, option
   const type = item.toString('utf8', currentIndex, currentIndex + 1)
   // Increment for the type and color (or semi-color for null) characters
   currentIndex += 2
-  console.log('type', type, item.toString('utf8', startIndex))
 
   if (type === 'N') {
     // Null
@@ -124,6 +123,7 @@ function unserializeItem(item: Buffer, startIndex: number, scope: Object, option
     if (container.constructor.name !== '__PHP_Incomplete_Class') {
       assert(typeof container.unserialize === 'function',
         `${container.constructor.name.toLowerCase()}.unserialize is not a function`)
+      // console.log('classContent', classContent)
       container.unserialize(classContent)
     }
     return { index: currentIndex, value: container }
@@ -170,7 +170,7 @@ function unserializeItem(item: Buffer, startIndex: number, scope: Object, option
       container[key] = value
     }, options)
     // +1 for the last } at the end of object
-    currentIndex += contentLength + 1
+    currentIndex += 1
     return { index: currentIndex, value: container }
   }
   throw new SyntaxError()

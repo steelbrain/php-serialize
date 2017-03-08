@@ -51,7 +51,7 @@ describe('unserialize', function() {
     }
     testOutput(new User(), { User })
   })
-  fit('works with nested serializable classes too', function() {
+  it('works with nested serializable classes too', function() {
     class ChildObject {
       constructor(name) {
         this.name = name
