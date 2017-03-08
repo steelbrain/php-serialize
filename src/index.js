@@ -3,13 +3,6 @@
 import assert from 'assert'
 import { getByteLength, getClass, getIncompleteClass } from './helpers'
 
-const REGEX = {
-  i: /i:([\d]+);/,
-  d: /d:([\d.]+);/,
-  C: /C:[\d]+:"([\S ]+?)":([\d]+):/,
-  O: /O:[\d]+:"([\S ]+?)":([\d]+):/,
-}
-
 type Options = {
   strict: boolean
 }
@@ -69,106 +62,150 @@ function serialize(item: any): string {
   return `O:${constructorName}:"${item.constructor.name}":${items.length / 2}:{${items.join('')}}`
 }
 
-function unserializeItem(item: string, scope: Object, options: Options): { index: number, value: any } {
-  const type = item.substr(0, 1)
-  if (type === 'i' || type === 'd') {
-    const match = REGEX[type].exec(item)
-    assert(Array.isArray(match), 'Syntax Error')
-    return { index: match[0].length, value: type === 'i' ? parseInt(match[1], 10) : parseFloat(match[1]) }
-  }
+function unserializeItem(item: Buffer, startIndex: number, scope: Object, options: Options): { index: number, value: any } {
+  let currentIndex = startIndex
+  const type = item.toString('utf8', currentIndex, currentIndex + 1)
+  // Increment for the type and color (or semi-color for null) characters
+  currentIndex += 2
+
   if (type === 'N') {
-    return { index: 2, value: null }
+    // Null
+    return { index: currentIndex, value: null }
+  }
+  if (type === 'i' || type === 'd') {
+    // Integer or Double (aka float)
+    const valueEnd = item.indexOf(';', currentIndex)
+    const value = item.toString('utf8', currentIndex, valueEnd)
+    // +1 because of extra semi-colon at the end
+    currentIndex += value.length + 1
+    return { index: currentIndex, value: type === 'i' ? parseInt(value, 10) : parseFloat(value) }
   }
   if (type === 'b') {
-    return { index: 4, value: item.substr(2, 1) === '1' }
+    // Boolean
+    const value = item.toString('utf8', currentIndex, currentIndex + 1)
+    // +2 for 1 digital value and a semi-colon
+    currentIndex += 2
+    return { index: currentIndex, value: value === '1' }
   }
   if (type === 's') {
-    const lengthEnd = item.indexOf(':', 2)
-    const length = parseInt(item.slice(2, lengthEnd), 10) || 0
-    const startIndex = 4 + (lengthEnd - 2)
-    const sliced = Buffer.from(item).slice(startIndex, startIndex + length).toString()
-    return { index: 4 + lengthEnd + length, value: sliced }
+    // String
+    const lengthEnd = item.indexOf(':', currentIndex)
+    const length = parseInt(item.slice(currentIndex, lengthEnd), 10) || 0
+    // +2 because of color and starting of inverted commas at start of string
+    currentIndex = lengthEnd + 2
+    const value = item.toString('utf8', currentIndex, currentIndex + length)
+    // +2 because of closing of inverted commas at end of string, and extra semi-colon
+    currentIndex += length + 2
+
+    return { index: currentIndex, value }
   }
   if (type === 'C') {
-    const info = REGEX.C.exec(item)
-    assert(Array.isArray(info), 'Syntax Error')
-    const className = info[1]
-    const contentLength = parseInt(info[2], 10)
-    const contentOffset = info.index + info[0].length + 1
-    const classContent = item.slice(contentOffset, contentOffset + contentLength)
-    const classReference = scope[className]
-    let container
-    if (!classReference) {
-      if (options.strict) {
-        assert(false, `Class ${className} not found in given scope`)
-      }
-      container = getIncompleteClass(className)
-    } else {
-      assert(typeof scope[className].prototype.unserialize === 'function',
-        `${className}.prototype.unserialize is not a function`)
-      container = new (getClass(scope[className].prototype))()
+    // Serializable class
+    const classNameLengthEnd = item.indexOf(':', currentIndex)
+    const classNameLength = parseInt(item.toString('utf8', currentIndex, classNameLengthEnd), 10) || 0
+
+    // +2 for : and start of inverted commas for class name
+    currentIndex = classNameLengthEnd + 2
+    const className = item.toString('utf8', currentIndex, currentIndex + classNameLength)
+    // +2 for end of inverted commas and color before inner content length
+    currentIndex += classNameLength + 2
+
+    const contentLengthEnd = item.indexOf(':', currentIndex)
+    const contentLength = parseInt(item.toString('utf8', currentIndex, contentLengthEnd), 10) || 0
+    // +2 for : and { at start of inner content
+    currentIndex = contentLengthEnd + 2
+
+    const classContent = item.toString('utf8', currentIndex, currentIndex + contentLength)
+    // +1 for the } at end of inner content
+    currentIndex += contentLength + 1
+
+    const container = getClassReference(className, scope, options.strict)
+    if (container.constructor.name !== '__PHP_Incomplete_Class') {
+      assert(typeof container.unserialize === 'function',
+        `${container.constructor.name.toLowerCase()}.unserialize is not a function`)
+      // console.log('classContent', classContent)
       container.unserialize(classContent)
     }
-    return { index: contentOffset + contentLength + 1, value: container }
+    return { index: currentIndex, value: container }
   }
   if (type === 'a') {
+    // Array or Object
     let first = true
-    let index = 0
-    let container
-    const lengthEnd = item.indexOf(':', 2)
-    const length = parseInt(item.slice(2, lengthEnd), 10) || 0
-    if (length !== 0) {
-      index = unserializeObject(length, item.slice(4 + (lengthEnd - 2)), scope, function(key, value) {
-        if (first) {
-          container = parseInt(key, 10) === 0 ? [] : {}
-          first = false
-        }
-        if (container.constructor.name === 'Array') {
-          container.push(value)
-        } else container[key] = value
-      }, options)
-    } else container = []
-    return { index: 4 + (lengthEnd - 2) + index + 1, value: container }
-  }
-  if (type === 'O') {
-    const info = REGEX.O.exec(item)
-    assert(Array.isArray(info), 'Syntax Error')
-    const className = info[1]
-    const contentLength = parseInt(info[2], 10)
-    const contentOffset = info.index + info[0].length + 1
-    const classReference = scope[className]
-    let container: Object
-    if (!classReference) {
-      if (options.strict) {
-        assert(false, `Class ${className} not found in given scope`)
+    let container = []
+    const lengthEnd = item.indexOf(':', currentIndex)
+    const length = parseInt(item.toString('utf8', currentIndex, lengthEnd), 10) || 0
+
+    // +2 for ":{" before the start of object
+    currentIndex = lengthEnd + 2
+    currentIndex = unserializeObject(item, currentIndex, length, scope, function(key, value) {
+      if (first) {
+        container = parseInt(key, 10) === 0 ? [] : {}
+        first = false
       }
-      container = getIncompleteClass(className)
-    } else {
-      container = new (getClass(scope[className].prototype))()
-    }
-    const index = unserializeObject(contentLength, item.slice(contentOffset), scope, function(key, value) {
       container[key] = value
     }, options)
-    return { index: contentOffset + index + 1, value: container }
+
+    // +1 for the last } at the end of object
+    currentIndex++
+    return { index: currentIndex, value: container }
+  }
+  if (type === 'O') {
+    // Non-Serializable Class
+    const classNameLengthEnd = item.indexOf(':', currentIndex)
+    const classNameLength = parseInt(item.toString('utf8', currentIndex, classNameLengthEnd), 10) || 0
+
+    // +2 for : and start of inverted commas for class name
+    currentIndex = classNameLengthEnd + 2
+    const className = item.toString('utf8', currentIndex, currentIndex + classNameLength)
+    // +2 for end of inverted commas and color before inner content length
+    currentIndex += classNameLength + 2
+
+    const contentLengthEnd = item.indexOf(':', currentIndex)
+    const contentLength = parseInt(item.toString('utf8', currentIndex, contentLengthEnd), 10) || 0
+    // +2 for : and { at start of object
+    currentIndex = contentLengthEnd + 2
+
+    const container = getClassReference(className, scope, options.strict)
+    currentIndex = unserializeObject(item, currentIndex, contentLength, scope, function(key, value) {
+      container[key] = value
+    }, options)
+    // +1 for the last } at the end of object
+    currentIndex += 1
+    return { index: currentIndex, value: container }
   }
   throw new SyntaxError()
 }
 
-function unserializeObject(count: number, content: string, scope: Object, valueCallback: Function, options: Options): number {
-  const realCount = count * 2
-  let index = 0
+function getClassReference(className: string, scope: Object, strict: boolean): Object {
+  let container
+  const classReference = scope[className]
+  if (!classReference) {
+    if (strict) {
+      assert(false, `Class ${className} not found in given scope`)
+    }
+    container = getIncompleteClass(className)
+  } else {
+    container = new (getClass(scope[className].prototype))()
+  }
+  return container
+}
+
+function unserializeObject(item: Buffer, startIndex: number, length: number, scope: Object, valueCallback: Function, options: Options): number {
   let key = null
-  for (let i = 0; i < realCount; ++i) {
-    const item = unserializeItem(content.slice(index), scope, options)
+  let currentIndex = startIndex
+
+  for (let i = 0; i < length * 2; ++i) {
+    const entry = unserializeItem(item, currentIndex, scope, options)
     if (key !== null) {
-      valueCallback(key, item.value)
+      valueCallback(key, entry.value)
       key = null
     } else {
-      key = item.value
+      key = entry.value
     }
-    index += item.index
+    currentIndex = entry.index
   }
-  return index
+
+  return currentIndex
 }
 
 function unserialize(item: string, scope: Object = {}, givenOptions: Object = {}): any {
@@ -176,7 +213,7 @@ function unserialize(item: string, scope: Object = {}, givenOptions: Object = {}
   if (typeof options.strict === 'undefined') {
     options.strict = true
   }
-  return unserializeItem(item, scope, options).value
+  return unserializeItem(Buffer.from(item), 0, scope, options).value
 }
 
 module.exports = { serialize, unserialize }
