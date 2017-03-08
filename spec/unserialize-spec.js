@@ -103,5 +103,6 @@ describe('unserialize', function() {
   })
   it('can work with multi-byte strings', function() {
     testOutput('你好世界')
+    testOutput(['Helló', 'World'])
   })
 })

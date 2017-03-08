@@ -87,7 +87,7 @@ function unserializeItem(item: string, scope: Object, options: Options): { index
     const length = parseInt(item.slice(2, lengthEnd), 10) || 0
     const startIndex = 4 + (lengthEnd - 2)
     const sliced = Buffer.from(item).slice(startIndex, startIndex + length).toString()
-    return { index: 4 + lengthEnd + length, value: sliced }
+    return { index: 4 + lengthEnd + sliced.length, value: sliced }
   }
   if (type === 'C') {
     const info = REGEX.C.exec(item)
@@ -107,6 +107,7 @@ function unserializeItem(item: string, scope: Object, options: Options): { index
       assert(typeof scope[className].prototype.unserialize === 'function',
         `${className}.prototype.unserialize is not a function`)
       container = new (getClass(scope[className].prototype))()
+      // $FlowIgnore: We validate it before, it has it. I'm sure
       container.unserialize(classContent)
     }
     return { index: contentOffset + contentLength + 1, value: container }
