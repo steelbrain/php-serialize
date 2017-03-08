@@ -65,7 +65,7 @@ function serialize(item: any): string {
 function unserializeItem(item: Buffer, startIndex: number, scope: Object, options: Options): { index: number, value: any } {
   let currentIndex = startIndex
   const type = item.toString('utf8', currentIndex, currentIndex + 1)
-  // Increment for the type and color (or semi-color for null) characters
+  // Increment for the type and colon (or semi-colon for null) characters
   currentIndex += 2
 
   if (type === 'N') {
@@ -91,7 +91,7 @@ function unserializeItem(item: Buffer, startIndex: number, scope: Object, option
     // String
     const lengthEnd = item.indexOf(':', currentIndex)
     const length = parseInt(item.slice(currentIndex, lengthEnd), 10) || 0
-    // +2 because of color and starting of inverted commas at start of string
+    // +2 because of colon and starting of inverted commas at start of string
     currentIndex = lengthEnd + 2
     const value = item.toString('utf8', currentIndex, currentIndex + length)
     // +2 because of closing of inverted commas at end of string, and extra semi-colon
@@ -107,7 +107,7 @@ function unserializeItem(item: Buffer, startIndex: number, scope: Object, option
     // +2 for : and start of inverted commas for class name
     currentIndex = classNameLengthEnd + 2
     const className = item.toString('utf8', currentIndex, currentIndex + classNameLength)
-    // +2 for end of inverted commas and color before inner content length
+    // +2 for end of inverted commas and colon before inner content length
     currentIndex += classNameLength + 2
 
     const contentLengthEnd = item.indexOf(':', currentIndex)
@@ -157,7 +157,7 @@ function unserializeItem(item: Buffer, startIndex: number, scope: Object, option
     // +2 for : and start of inverted commas for class name
     currentIndex = classNameLengthEnd + 2
     const className = item.toString('utf8', currentIndex, currentIndex + classNameLength)
-    // +2 for end of inverted commas and color before inner content length
+    // +2 for end of inverted commas and colon before inner content length
     currentIndex += classNameLength + 2
 
     const contentLengthEnd = item.indexOf(':', currentIndex)
