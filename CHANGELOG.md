@@ -1,3 +1,8 @@
+## 1.2.5
+
+- Fixed support for multi-byte strings
+- Rewrote most of decode internals to work on Buffers instead of strings (external API still the same)
+
 ## 1.2.4
 
 - Move `flow-bin` to dev dependencies from dependencies (sorry guys!)
