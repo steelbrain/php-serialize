@@ -12,7 +12,7 @@ describe('unserialize', function() {
     expect(unserialized).toEqual(testSubject)
   }
 
-  fit('works well', function() {
+  it('works well', function() {
     testOutput('Hey I am a very long string, this is to test if this package works with long strings, See #2')
     testOutput(1)
     testOutput(1.1)
@@ -51,7 +51,7 @@ describe('unserialize', function() {
     }
     testOutput(new User(), { User })
   })
-  it('works with nested serializable classes too', function() {
+  fit('works with nested serializable classes too', function() {
     class ChildObject {
       constructor(name) {
         this.name = name

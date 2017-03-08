@@ -3,13 +3,6 @@
 import assert from 'assert'
 import { getByteLength, getClass, getIncompleteClass } from './helpers'
 
-const REGEX = {
-  i: /i:([\d]+);/,
-  d: /d:([\d.]+);/,
-  C: /C:[\d]+:"([\S ]+?)":([\d]+):/,
-  O: /O:[\d]+:"([\S ]+?)":([\d]+):/,
-}
-
 type Options = {
   strict: boolean
 }
@@ -74,6 +67,7 @@ function unserializeItem(item: Buffer, startIndex: number, scope: Object, option
   const type = item.toString('utf8', currentIndex, currentIndex + 1)
   // Increment for the type and color (or semi-color for null) characters
   currentIndex += 2
+  console.log('type', type, item.toString('utf8', startIndex))
 
   if (type === 'N') {
     // Null
@@ -108,28 +102,31 @@ function unserializeItem(item: Buffer, startIndex: number, scope: Object, option
   }
   if (type === 'C') {
     // Serializable class
-    console.log('got a serialiazable class')
-    const info = REGEX.C.exec(item)
-    assert(Array.isArray(info), 'Syntax Error')
-    const className = info[1]
-    const contentLength = parseInt(info[2], 10)
-    const contentOffset = info.index + info[0].length + 1
-    const classContent = item.slice(contentOffset, contentOffset + contentLength)
-    const classReference = scope[className]
-    let container
-    if (!classReference) {
-      if (options.strict) {
-        assert(false, `Class ${className} not found in given scope`)
-      }
-      container = getIncompleteClass(className)
-    } else {
-      assert(typeof scope[className].prototype.unserialize === 'function',
-        `${className}.prototype.unserialize is not a function`)
-      container = new (getClass(scope[className].prototype))()
-      // $FlowIgnore: We validate it before, it has it. I'm sure
+    const classNameLengthEnd = item.indexOf(':', currentIndex)
+    const classNameLength = parseInt(item.toString('utf8', currentIndex, classNameLengthEnd), 10) || 0
+
+    // +2 for : and start of inverted commas for class name
+    currentIndex = classNameLengthEnd + 2
+    const className = item.toString('utf8', currentIndex, currentIndex + classNameLength)
+    // +2 for end of inverted commas and color before inner content length
+    currentIndex += classNameLength + 2
+
+    const contentLengthEnd = item.indexOf(':', currentIndex)
+    const contentLength = parseInt(item.toString('utf8', currentIndex, contentLengthEnd), 10) || 0
+    // +2 for : and { at start of inner content
+    currentIndex = contentLengthEnd + 2
+
+    const classContent = item.toString('utf8', currentIndex, currentIndex + contentLength)
+    // +1 for the } at end of inner content
+    currentIndex += contentLength + 1
+
+    const container = getClassReference(className, scope, options.strict)
+    if (container.constructor.name !== '__PHP_Incomplete_Class') {
+      assert(typeof container.unserialize === 'function',
+        `${container.constructor.name.toLowerCase()}.unserialize is not a function`)
       container.unserialize(classContent)
     }
-    return { index: contentOffset + contentLength + 1, value: container }
+    return { index: currentIndex, value: container }
   }
   if (type === 'a') {
     // Array or Object
@@ -138,7 +135,7 @@ function unserializeItem(item: Buffer, startIndex: number, scope: Object, option
     const lengthEnd = item.indexOf(':', currentIndex)
     const length = parseInt(item.toString('utf8', currentIndex, lengthEnd), 10) || 0
 
-    // +2 for ":{" before the start of array
+    // +2 for ":{" before the start of object
     currentIndex = lengthEnd + 2
     currentIndex = unserializeObject(item, currentIndex, length, scope, function(key, value) {
       if (first) {
@@ -148,33 +145,49 @@ function unserializeItem(item: Buffer, startIndex: number, scope: Object, option
       container[key] = value
     }, options)
 
-    // +1 for the last } at the end of array
+    // +1 for the last } at the end of object
     currentIndex++
     return { index: currentIndex, value: container }
   }
   if (type === 'O') {
     // Non-Serializable Class
-    const info = REGEX.O.exec(item)
-    assert(Array.isArray(info), 'Syntax Error')
-    const className = info[1]
-    const contentLength = parseInt(info[2], 10)
-    const contentOffset = info.index + info[0].length + 1
-    const classReference = scope[className]
-    let container: Object
-    if (!classReference) {
-      if (options.strict) {
-        assert(false, `Class ${className} not found in given scope`)
-      }
-      container = getIncompleteClass(className)
-    } else {
-      container = new (getClass(scope[className].prototype))()
-    }
-    // const index = unserializeObject(contentLength, item.slice(contentOffset), scope, function(key, value) {
-    //   container[key] = value
-    // }, options)
-    return { index: contentOffset + index + 1, value: container }
+    const classNameLengthEnd = item.indexOf(':', currentIndex)
+    const classNameLength = parseInt(item.toString('utf8', currentIndex, classNameLengthEnd), 10) || 0
+
+    // +2 for : and start of inverted commas for class name
+    currentIndex = classNameLengthEnd + 2
+    const className = item.toString('utf8', currentIndex, currentIndex + classNameLength)
+    // +2 for end of inverted commas and color before inner content length
+    currentIndex += classNameLength + 2
+
+    const contentLengthEnd = item.indexOf(':', currentIndex)
+    const contentLength = parseInt(item.toString('utf8', currentIndex, contentLengthEnd), 10) || 0
+    // +2 for : and { at start of object
+    currentIndex = contentLengthEnd + 2
+
+    const container = getClassReference(className, scope, options.strict)
+    currentIndex = unserializeObject(item, currentIndex, contentLength, scope, function(key, value) {
+      container[key] = value
+    }, options)
+    // +1 for the last } at the end of object
+    currentIndex += contentLength + 1
+    return { index: currentIndex, value: container }
   }
   throw new SyntaxError()
+}
+
+function getClassReference(className: string, scope: Object, strict: boolean): Object {
+  let container
+  const classReference = scope[className]
+  if (!classReference) {
+    if (strict) {
+      assert(false, `Class ${className} not found in given scope`)
+    }
+    container = getIncompleteClass(className)
+  } else {
+    container = new (getClass(scope[className].prototype))()
+  }
+  return container
 }
 
 function unserializeObject(item: Buffer, startIndex: number, length: number, scope: Object, valueCallback: Function, options: Options): number {
