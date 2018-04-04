@@ -7,7 +7,16 @@ type Options = {
   strict: boolean
 }
 
-function serialize(item: any): string {
+function getClassNamespace(className: string, scope: Object) {
+  for (const key in scope) {
+    if ({}.hasOwnProperty.call(scope, key) && scope[key].name === className) {
+      return key
+    }
+  }
+  return className
+}
+
+function serialize(item: any, scope: Object = {}): string {
   const type = typeof item
   if (item === null) {
     return 'N;'
@@ -47,11 +56,13 @@ function serialize(item: any): string {
   }
   if (typeof item.serialize === 'function') {
     const serialized = item.serialize()
+    const constructorName = getClassNamespace(item.constructor.name, scope)
     assert(typeof serialized === 'string', `${item.constructor.name}.serialize should return a string`)
-    return `C:${item.constructor.name.length}:"${item.constructor.name}":${serialized.length}:{${serialized}}`
+    return `C:${constructorName.length}:"${constructorName}":${serialized.length}:{${serialized}}`
   }
   const items = []
-  const constructorName = item.__PHP_Incomplete_Class_Name || item.constructor.name.length
+  const constructorName = getClassNamespace(item.constructor.name, scope)
+  const constructorNameLength = constructorName.length
   for (const key in item) {
     if ({}.hasOwnProperty.call(item, key) && typeof item[key] !== 'function') {
       const value = item[key]
@@ -59,7 +70,7 @@ function serialize(item: any): string {
       items.push(serialize(value))
     }
   }
-  return `O:${constructorName}:"${item.constructor.name}":${items.length / 2}:{${items.join('')}}`
+  return `O:${constructorNameLength}:"${constructorName}":${items.length / 2}:{${items.join('')}}`
 }
 
 function unserializeItem(item: Buffer, startIndex: number, scope: Object, options: Options): { index: number, value: any } {
@@ -175,6 +186,8 @@ function unserializeItem(item: Buffer, startIndex: number, scope: Object, option
   }
   throw new SyntaxError()
 }
+
+
 
 function getClassReference(className: string, scope: Object, strict: boolean): Object {
   let container
