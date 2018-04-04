@@ -1,8 +1,9 @@
 <?php
+
 function debug($item) {
   echo serialize($item), "\n";
 }
-class Test implements Serializable {
+class Test implements \Serializable {
   function serialize() {
     return "asd";
   }
@@ -11,7 +12,7 @@ class Test implements Serializable {
 class TestTwo {
 
 }
-class TestParent implements Serializable {
+class TestParent implements \Serializable {
   function serialize() {
     return serialize(array(
       new Test(),
@@ -20,6 +21,7 @@ class TestParent implements Serializable {
   }
   function unserialize($item) {}
 }
+
 
 debug(null);
 debug(1);
@@ -35,3 +37,4 @@ debug(array('key' => 'value1', 'key2' => 'value2'));
 debug(new Test());
 debug(new TestTwo());
 debug(new TestParent());
+require('serialize-namespaces.php');

@@ -4,8 +4,8 @@ import { serialize } from '../'
 
 module.exports = function() {
   const items = []
-  function debug(item: string) {
-    items.push(serialize(item))
+  function debug(item: string, scope: Object = {}) {
+    items.push(serialize(item, scope))
   }
 
   class Test {
@@ -13,17 +13,13 @@ module.exports = function() {
       return 'asd'
     }
   }
-  class TestTwo {
-
-  }
+  class TestTwo {}
   class TestParent {
     serialize() {
-      return serialize([
-        new Test(),
-        new TestTwo(),
-      ])
+      return serialize([new Test(), new TestTwo()])
     }
   }
+  class DeepUser {}
 
   debug(null)
   debug(1)
@@ -39,6 +35,9 @@ module.exports = function() {
   debug(new Test())
   debug(new TestTwo())
   debug(new TestParent())
+  debug(new DeepUser(), {
+    'Deep\\User': DeepUser,
+  })
 
   return items
 }
