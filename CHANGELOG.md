@@ -1,3 +1,7 @@
+## 1.3.0
+
+- Added support for namespaced serializations
+
 ## 1.2.5
 
 - Fixed support for multi-byte strings
