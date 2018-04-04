@@ -4,7 +4,7 @@ import assert from 'assert'
 import { getByteLength, getClass, getIncompleteClass } from './helpers'
 
 type Options = {
-  strict: boolean
+  strict: boolean,
 }
 
 function getClassNamespace(className: string, scope: Object) {
@@ -56,13 +56,12 @@ function serialize(item: any, scope: Object = {}): string {
   }
   if (typeof item.serialize === 'function') {
     const serialized = item.serialize()
-    const constructorName = getClassNamespace(item.constructor.name, scope)
+    const constructorName = item.__PHP_Incomplete_Class_Name || getClassNamespace(item.constructor.name, scope)
     assert(typeof serialized === 'string', `${item.constructor.name}.serialize should return a string`)
     return `C:${constructorName.length}:"${constructorName}":${serialized.length}:{${serialized}}`
   }
   const items = []
-  const constructorName = getClassNamespace(item.constructor.name, scope)
-  const constructorNameLength = constructorName.length
+  const constructorName = item.__PHP_Incomplete_Class_Name || getClassNamespace(item.constructor.name, scope)
   for (const key in item) {
     if ({}.hasOwnProperty.call(item, key) && typeof item[key] !== 'function') {
       const value = item[key]
@@ -70,7 +69,7 @@ function serialize(item: any, scope: Object = {}): string {
       items.push(serialize(value))
     }
   }
-  return `O:${constructorNameLength}:"${constructorName}":${items.length / 2}:{${items.join('')}}`
+  return `O:${constructorName.length}:"${constructorName}":${items.length / 2}:{${items.join('')}}`
 }
 
 function unserializeItem(item: Buffer, startIndex: number, scope: Object, options: Options): { index: number, value: any } {
@@ -132,8 +131,10 @@ function unserializeItem(item: Buffer, startIndex: number, scope: Object, option
 
     const container = getClassReference(className, scope, options.strict)
     if (container.constructor.name !== '__PHP_Incomplete_Class') {
-      assert(typeof container.unserialize === 'function',
-        `${container.constructor.name.toLowerCase()}.unserialize is not a function`)
+      assert(
+        typeof container.unserialize === 'function',
+        `${container.constructor.name.toLowerCase()}.unserialize is not a function`,
+      )
       // console.log('classContent', classContent)
       container.unserialize(classContent)
     }
@@ -148,13 +149,20 @@ function unserializeItem(item: Buffer, startIndex: number, scope: Object, option
 
     // +2 for ":{" before the start of object
     currentIndex = lengthEnd + 2
-    currentIndex = unserializeObject(item, currentIndex, length, scope, function(key, value) {
-      if (first) {
-        container = parseInt(key, 10) === 0 ? [] : {}
-        first = false
-      }
-      container[key] = value
-    }, options)
+    currentIndex = unserializeObject(
+      item,
+      currentIndex,
+      length,
+      scope,
+      function(key, value) {
+        if (first) {
+          container = parseInt(key, 10) === 0 ? [] : {}
+          first = false
+        }
+        container[key] = value
+      },
+      options,
+    )
 
     // +1 for the last } at the end of object
     currentIndex++
@@ -177,17 +185,22 @@ function unserializeItem(item: Buffer, startIndex: number, scope: Object, option
     currentIndex = contentLengthEnd + 2
 
     const container = getClassReference(className, scope, options.strict)
-    currentIndex = unserializeObject(item, currentIndex, contentLength, scope, function(key, value) {
-      container[key] = value
-    }, options)
+    currentIndex = unserializeObject(
+      item,
+      currentIndex,
+      contentLength,
+      scope,
+      function(key, value) {
+        container[key] = value
+      },
+      options,
+    )
     // +1 for the last } at the end of object
     currentIndex += 1
     return { index: currentIndex, value: container }
   }
   throw new SyntaxError()
 }
-
-
 
 function getClassReference(className: string, scope: Object, strict: boolean): Object {
   let container
@@ -203,7 +216,14 @@ function getClassReference(className: string, scope: Object, strict: boolean): O
   return container
 }
 
-function unserializeObject(item: Buffer, startIndex: number, length: number, scope: Object, valueCallback: Function, options: Options): number {
+function unserializeObject(
+  item: Buffer,
+  startIndex: number,
+  length: number,
+  scope: Object,
+  valueCallback: Function,
+  options: Options,
+): number {
   let key = null
   let currentIndex = startIndex
 
