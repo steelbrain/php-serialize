@@ -7,7 +7,16 @@ type Options = {
   strict: boolean
 }
 
-function serialize(item: any, scope: Object): string {
+function getClassNamespace(className: string, scope: Object) {
+  for (const key in scope) {
+    if ({}.hasOwnProperty.call(scope, key) && scope[key].name === className) {
+      return key
+    }
+  }
+  return className
+}
+
+function serialize(item: any, scope: Object = {}): string {
   const type = typeof item
   if (item === null) {
     return 'N;'
@@ -53,7 +62,7 @@ function serialize(item: any, scope: Object): string {
   }
   const items = []
   const constructorName = getClassNamespace(item.constructor.name, scope)
-  const constructorNameLength = item.__PHP_Incomplete_Class_Name || constructorName.length
+  const constructorNameLength = constructorName.length
   for (const key in item) {
     if ({}.hasOwnProperty.call(item, key) && typeof item[key] !== 'function') {
       const value = item[key]
@@ -178,14 +187,7 @@ function unserializeItem(item: Buffer, startIndex: number, scope: Object, option
   throw new SyntaxError()
 }
 
-function getClassNamespace(className: string, scope: Object) {
-  for (const key in scope) {
-    if (scope[key].name === className) {
-      return key
-    }
-  }
-  return className
-}
+
 
 function getClassReference(className: string, scope: Object, strict: boolean): Object {
   let container
