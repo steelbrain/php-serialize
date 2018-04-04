@@ -7,13 +7,13 @@ type Options = {
   strict: boolean,
 }
 
-function getClassNamespace(className: string, scope: Object) {
+function getClassNamespace(item: any, scope: Object) {
   for (const key in scope) {
-    if ({}.hasOwnProperty.call(scope, key) && scope[key].name === className) {
+    if ({}.hasOwnProperty.call(scope, key) && scope[key] === item.constructor) {
       return key
     }
   }
-  return className
+  return item.constructor.name
 }
 
 function serialize(item: any, scope: Object = {}): string {
@@ -56,12 +56,12 @@ function serialize(item: any, scope: Object = {}): string {
   }
   if (typeof item.serialize === 'function') {
     const serialized = item.serialize()
-    const constructorName = item.__PHP_Incomplete_Class_Name || getClassNamespace(item.constructor.name, scope)
+    const constructorName = item.__PHP_Incomplete_Class_Name || getClassNamespace(item, scope)
     assert(typeof serialized === 'string', `${item.constructor.name}.serialize should return a string`)
     return `C:${constructorName.length}:"${constructorName}":${serialized.length}:{${serialized}}`
   }
   const items = []
-  const constructorName = item.__PHP_Incomplete_Class_Name || getClassNamespace(item.constructor.name, scope)
+  const constructorName = item.__PHP_Incomplete_Class_Name || getClassNamespace(item, scope)
   for (const key in item) {
     if ({}.hasOwnProperty.call(item, key) && typeof item[key] !== 'function') {
       const value = item[key]
