@@ -22,7 +22,7 @@ function serialize(item: any, scope: Object = {}): string {
     return 'N;'
   }
   if (type === 'number') {
-    if (item % 1 === 0) {
+    if (Number.isSafeInteger(item)) {
       return `i:${item};`
     }
     return `d:${item};`
