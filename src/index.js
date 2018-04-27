@@ -25,7 +25,7 @@ function serialize(item: any, scope: Object = {}): string {
     if (item === parseInt(item, 10)) {
       return `i:${item};`
     }
-    return `d:${item};`
+    return `d:${item.toString().toUpperCase()};`
   }
   if (type === 'string') {
     return `s:${getByteLength(item)}:"${item}";`
