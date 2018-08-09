@@ -65,8 +65,8 @@ function serialize(item: any, scope: Object = {}): string {
   for (const key in item) {
     if ({}.hasOwnProperty.call(item, key) && typeof item[key] !== 'function') {
       const value = item[key]
-      items.push(serialize(key))
-      items.push(serialize(value))
+      items.push(serialize(key, scope))
+      items.push(serialize(value, scope))
     }
   }
   return `O:${constructorName.length}:"${constructorName}":${items.length / 2}:{${items.join('')}}`
