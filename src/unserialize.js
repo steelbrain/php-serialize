@@ -2,7 +2,7 @@
 
 import invariant from 'assert'
 import Parser from './parser'
-import { isInteger, getClass, getIncompleteClass } from './helpers'
+import { isInteger, getClass, getIncompleteClass, __PHP_Incomplete_Class } from './helpers'
 
 export type Options = {|
   strict: boolean,
@@ -75,8 +75,10 @@ function unserializeItem(parser: Parser, scope: Object, options: Options) {
     parser.seekExpected(':')
     const payload = parser.getByLength('{', '}', length => parser.readAhead(length))
     const result = getClassReference(name, scope, options.strict)
-    invariant(result.unserialize, `unserialize not found on class when processing '${name}'`)
-    result.unserialize(payload)
+    if (!(result instanceof __PHP_Incomplete_Class)) {
+      invariant(result.unserialize, `unserialize not found on class when processing '${name}'`)
+      result.unserialize(payload)
+    }
     return result
   }
   throw new Error(`Invalid type '${type}' encounterd while unserializing`)
