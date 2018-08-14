@@ -1,12 +1,11 @@
 import test from 'ava'
 import path from 'path'
-import { exec } from 'sb-exec'
+import fs from 'fs'
 
 const serializeOutput = require('./serialize')
 
-const phpFilePath = path.join(__dirname, 'serialize.php')
 test('serialize compat with php', async function(t) {
-  const givenOutput = await exec('php', [phpFilePath])
+  const givenOutput = await fs.promises.readFile(path.join(__dirname, 'serialize.php.out'), 'utf8')
   // NOTE: Patch PHP floating point madness
   const output = givenOutput
     .replace('1.1000000000000001', '1.1')

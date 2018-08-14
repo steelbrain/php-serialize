@@ -16,13 +16,16 @@ jobs:
           paths:
             - node_modules
   test:
+    working_directory: ~/php-serialize
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:10
     steps:
       - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: Build Project
-          command: npm build
+          command: npm run build
       - run:
           name: Run Tests
           command: npm test
@@ -35,6 +38,3 @@ workflows:
       - test:
           requires:
             - build
-          filters:
-            branches:
-              only: master

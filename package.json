@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "ava spec/*-spec.js",
+    "test:update-php-output": "php spec/serialize.php > spec/serialize.php.out",
     "lint": "eslint .",
     "build": "sb-babel-cli src -o lib",
     "watch": "npm run build -- -w"
@@ -26,8 +27,7 @@
     "babel-preset-steelbrain": "^5.0.0",
     "eslint-config-steelbrain": "^5.0.2",
     "flow-bin": "^0.47.0",
-    "sb-babel-cli": "^0.1.2",
-    "sb-exec": "^4.0.0"
+    "sb-babel-cli": "^0.1.2"
   },
   "ava": {
     "babel": {

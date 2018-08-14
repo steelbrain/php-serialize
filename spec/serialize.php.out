@@ -1,0 +1,16 @@
+N;
+i:1;
+d:1.1;
+d:1.7976931348623157E+308;
+s:12:"你好世界";
+a:5:{i:0;i:1;i:1;i:2;i:2;i:3;i:3;i:4;i:4;i:5;}
+a:2:{i:0;s:6:"Helló";i:1;s:5:"World";}
+a:1:{s:3:"hey";s:2:"hi";}
+a:2:{s:3:"key";s:5:"value";s:4:"key2";i:1;}
+a:2:{s:3:"key";i:1;s:4:"key2";s:6:"value2";}
+a:2:{s:3:"key";s:6:"1value";s:4:"key2";s:6:"value2";}
+a:2:{s:3:"key";s:6:"value1";s:4:"key2";s:6:"value2";}
+C:4:"Test":3:{asd}
+O:7:"TestTwo":1:{s:4:"test";s:2:"hi";}
+C:10:"TestParent":70:{a:2:{i:0;C:4:"Test":3:{asd}i:1;O:7:"TestTwo":1:{s:4:"test";s:2:"hi";}}}
+O:9:"Deep\User":0:{}
