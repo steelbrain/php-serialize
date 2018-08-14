@@ -10,7 +10,10 @@ class Test implements \Serializable {
   function unserialize($item) {}
 }
 class TestTwo {
-
+  public $test;
+  public function __construct() {
+    $this->test = "hi";
+  }
 }
 class TestParent implements \Serializable {
   function serialize() {
