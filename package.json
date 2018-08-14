@@ -6,9 +6,8 @@
   "scripts": {
     "test": "apm test",
     "lint": "eslint .",
-    "clean": "rm -rf lib",
-    "compile": "npm run clean; babel src --out-dir lib",
-    "watch": "npm run compile -- -w"
+    "build": "sb-babel-cli src -o lib",
+    "watch": "npm run build -- -w"
   },
   "repository": {
     "type": "git",
@@ -21,10 +20,11 @@
   },
   "homepage": "https://github.com/steelbrain/php-serialize#readme",
   "devDependencies": {
-    "babel-cli": "^6.22.2",
+    "babel-core": "^6.26.3",
     "babel-preset-steelbrain": "^5.0.0",
-    "eslint-config-steelbrain": "^3.0.0",
+    "eslint-config-steelbrain": "^5.0.2",
     "flow-bin": "^0.47.0",
+    "sb-babel-cli": "^0.1.2",
     "sb-exec": "^4.0.0"
   }
 }
