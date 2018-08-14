@@ -1,10 +1,10 @@
 'use babel'
 
-import { serialize } from '../'
+const { serialize } = require('../')
 
-module.exports = function() {
+function serializeForTests() {
   const items = []
-  function debug(item: string, scope: Object = {}) {
+  function debug(item, scope = {}) {
     items.push(serialize(item, scope))
   }
 
@@ -13,7 +13,11 @@ module.exports = function() {
       return 'asd'
     }
   }
-  class TestTwo {}
+  class TestTwo {
+    constructor() {
+      this.test = 'hi'
+    }
+  }
   class TestParent {
     serialize() {
       return serialize([new Test(), new TestTwo()])
@@ -42,3 +46,5 @@ module.exports = function() {
 
   return items
 }
+
+module.exports = serializeForTests

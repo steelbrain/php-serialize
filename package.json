@@ -4,11 +4,11 @@
   "description": "PHP serialize/unserialize in Javascript",
   "main": "lib/index.js",
   "scripts": {
-    "test": "apm test",
+    "test": "ava spec/*-spec.js",
+    "test:update-php-output": "php spec/serialize.php > spec/serialize.php.out",
     "lint": "eslint .",
-    "clean": "rm -rf lib",
-    "compile": "npm run clean; babel src --out-dir lib",
-    "watch": "npm run compile -- -w"
+    "build": "sb-babel-cli src -o lib",
+    "watch": "npm run build -- -w"
   },
   "repository": {
     "type": "git",
@@ -21,10 +21,26 @@
   },
   "homepage": "https://github.com/steelbrain/php-serialize#readme",
   "devDependencies": {
-    "babel-cli": "^6.22.2",
+    "@babel/plugin-proposal-class-properties": "^7.0.0-rc.1",
+    "ava": "1.0.0-beta.7",
+    "babel-core": "^6.26.3",
     "babel-preset-steelbrain": "^5.0.0",
-    "eslint-config-steelbrain": "^3.0.0",
+    "eslint-config-steelbrain": "^5.0.2",
     "flow-bin": "^0.47.0",
-    "sb-exec": "^4.0.0"
-  }
+    "sb-babel-cli": "^0.1.2"
+  },
+  "ava": {
+    "babel": {
+      "testOptions": {
+        "babelrc": false,
+        "plugins": [
+          "@babel/proposal-class-properties"
+        ],
+        "presets": [
+          "module:ava/stage-4"
+        ]
+      }
+    }
+  },
+  "dependencies": {}
 }
