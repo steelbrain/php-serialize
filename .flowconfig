@@ -4,6 +4,16 @@
 
 [libs]
 
+[lints]
+all=error
+sketchy-null-bool=warn
+sketchy-null-string=warn
+unclear-type=warn
+untyped-import=off
+
 [options]
-module.system=node
-suppress_comment= \\(.\\|\n\\)*\\$FlowIgnore
+
+[strict]
+
+[version]
+^0.78.0
