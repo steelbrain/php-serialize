@@ -49,7 +49,8 @@ export default class Parser {
   seekExpected(contents: string) {
     const slice = this.readAhead(contents.length)
     if (slice !== contents) {
-      throw this.error()
+      this.index -= contents.length
+      throw this.error(`Expected '${contents}'`)
     }
   }
   getType(): ParserType {
