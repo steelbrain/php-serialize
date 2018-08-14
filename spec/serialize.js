@@ -13,7 +13,11 @@ module.exports = function() {
       return 'asd'
     }
   }
-  class TestTwo {}
+  class TestTwo {
+    constructor() {
+      this.test = 'hi'
+    }
+  }
   class TestParent {
     serialize() {
       return serialize([new Test(), new TestTwo()])
