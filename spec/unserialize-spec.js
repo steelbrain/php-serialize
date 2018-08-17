@@ -113,3 +113,12 @@ testWithOutput('it can work with multi-byte strings', function(t, testOutput) {
   testOutput('你好世界')
   testOutput(['Helló', 'World'])
 })
+test('unserialize key pairs correctly, not serialized by self', function(t) {
+  t.snapshot(unserialize(`a:1:{s:12:"97YEAY3JO237";s:2:"hi"}`))
+  t.snapshot(unserialize(`a:1:{s:12:"02YJXTVI6ZOJ";s:2:"hi"}`))
+  t.snapshot(unserialize(`a:1:{s:12:"X0YJXTVI6ZOJ";s:2:"hi"}`))
+  t.snapshot(unserialize(`a:1:{s:2:"X0";s:2:"hi"}`))
+  t.snapshot(unserialize(`a:1:{s:12:"0XYJXTVI6ZOJ";s:2:"hi"}`))
+  t.snapshot(unserialize(`a:1:{s:2:"0x";s:2:"hi"}`))
+  t.snapshot(unserialize(`a:1:{s:2:"0N";s:2:"hi"}`))
+})
