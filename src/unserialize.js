@@ -26,8 +26,8 @@ function unserializePairs(parser: Parser, length: number, scope: Object, options
     const key = unserializeItem(parser, scope, options)
     parser.seekExpected(';')
     const value = unserializeItem(parser, scope, options)
-    if (typeof value !== 'object' || value === null) {
-      parser.seekExpected(';')
+    if (parser.peekAhead(1) === ';') {
+      parser.advance(1)
     }
     pairs.push({ key, value })
   }

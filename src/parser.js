@@ -31,8 +31,11 @@ export default class Parser {
   error(message: string = 'Syntax Error') {
     return new Error(`${message} at index ${this.index} while unserializing payload`)
   }
+  advance(index: number) {
+    this.index += index
+  }
   readAhead(index: number) {
-    const contents = this.peakAhead(index)
+    const contents = this.peekAhead(index)
     this.index += index
     return contents
   }
@@ -43,7 +46,7 @@ export default class Parser {
     }
     return this.readAhead(index - this.index)
   }
-  peakAhead(index: number): string {
+  peekAhead(index: number): string {
     return this.contents.toString('utf8', this.index, this.index + index)
   }
   seekExpected(contents: string) {

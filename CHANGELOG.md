@@ -1,3 +1,7 @@
+## 2.0.1
+
+- Fix validation being too strict for pairs
+
 ## 2.0.0
 
 - Simplify internals
