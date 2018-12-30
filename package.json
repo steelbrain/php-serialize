@@ -25,7 +25,7 @@
     "ava": "1.0.0-beta.7",
     "babel-core": "^6.26.3",
     "babel-preset-steelbrain": "^5.0.0",
-    "eslint-config-steelbrain": "^5.0.2",
+    "eslint-config-steelbrain": "^6.0.0",
     "flow-bin": "^0.79.0",
     "sb-babel-cli": "^0.1.2"
   },
