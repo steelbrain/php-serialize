@@ -22,7 +22,7 @@
   "homepage": "https://github.com/steelbrain/php-serialize#readme",
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.0.0-rc.1",
-    "ava": "1.0.0-beta.7",
+    "ava": "1.0.1",
     "babel-core": "^6.26.3",
     "babel-preset-steelbrain": "^5.0.0",
     "eslint-config-steelbrain": "^5.0.2",
