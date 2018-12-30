@@ -8,7 +8,8 @@
     "test:update-php-output": "php spec/serialize.php > spec/serialize.php.out",
     "lint": "(flow check) && (eslint . ) && (prettier --list-different src/*.js)",
     "build": "sb-babel-cli src -o lib",
-    "watch": "npm run build -- -w"
+    "watch": "npm run build -- -w",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",

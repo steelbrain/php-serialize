@@ -23,7 +23,7 @@ jobs:
           name: Save NPM Package Cache
           key: npm-packages-{{ .Branch }}-{{ checksum "package-lock.json" }}
           paths:
-            - node_modules/
+            - ~/php-serialize/node_modules
   test:
     working_directory: ~/php-serialize
     docker:
