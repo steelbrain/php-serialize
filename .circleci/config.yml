@@ -3,32 +3,45 @@ jobs:
   build:
     working_directory: ~/php-serialize
     docker:
-      - image: circleci/node:8
+      - image: node:10-jessie
     steps:
       - checkout
       - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          name: Restore NPM Package Cache
+          keys:
+            - npm-packages-{{ .Branch }}-{{ checksum "package-lock.json" }}
+            - npm-packages-{{ .Branch }}
+            - npm-packages-master
+            - npm-packages-
+      - run:
+          name: Packager Version
+          command: npm --version
       - run:
           name: Install Dependencies
           command: npm install
       - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          name: Save NPM Package Cache
+          key: npm-packages-{{ .Branch }}-{{ checksum "package-lock.json" }}
           paths:
-            - node_modules
+            - node_modules/
   test:
     working_directory: ~/php-serialize
     docker:
-      - image: circleci/node:10
+      - image: node:10-jessie
     steps:
       - checkout
       - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          name: Restore NPM Package Cache
+          key: npm-packages-{{ .Branch }}-{{ checksum "package-lock.json" }}
       - run:
-          name: Build Project
-          command: npm run build
+          name: Compile sources
+          command: npm run prepare
       - run:
-          name: Run Tests
-          command: npm test
+          name: Lint sources
+          command: npm run lint
+      - run:
+          name: Test
+          command: npm run test
 
 workflows:
   version: 2

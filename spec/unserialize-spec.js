@@ -1,5 +1,5 @@
 import test from 'ava'
-import { serialize, unserialize } from '../'
+import { serialize, unserialize } from '..'
 
 function testWithOutput(message, callback) {
   test(message, function(t) {
@@ -101,7 +101,9 @@ testWithOutput('it accepts serialiazable classes not available in scope when str
 })
 testWithOutput('it accepts classes not available in scope when strict mode is off', function(t) {
   class TestParent {
-    a = 10
+    constructor() {
+      this.a = 10
+    }
   }
   const item = new TestParent()
   const unserialized = unserialize(serialize(item), {}, { strict: false })

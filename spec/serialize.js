@@ -1,6 +1,6 @@
 'use babel'
 
-const { serialize } = require('../')
+const { serialize } = require('..')
 
 function serializeForTests() {
   const items = []
@@ -28,7 +28,7 @@ function serializeForTests() {
   debug(null)
   debug(1)
   debug(1.1)
-  debug(1.7976931348623157E+308)
+  debug(1.7976931348623157e308)
   debug('你好世界')
   debug([1, 2, 3, 4, 5])
   debug(['Helló', 'World'])
