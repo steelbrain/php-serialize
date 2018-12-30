@@ -15,8 +15,12 @@ function serializeObject(item: Object, scope: Object): string {
   return `${processed.length}:{${processed.join('')}}`
 }
 
-export default function serialize(item: any, scope: Object = {}): string {
+export default function serialize(item: any, scope: Object = {}, givenOptions: Object = {}): string {
   const type = typeof item
+  const options: any = Object.assign({}, givenOptions)
+  if (typeof options.encoding === 'undefined') {
+    options.encoding = 'utf8'
+  }
 
   if (item === null) {
     return 'N;'
@@ -28,7 +32,7 @@ export default function serialize(item: any, scope: Object = {}): string {
     return `d:${item.toString().toUpperCase()};`
   }
   if (type === 'string') {
-    return `s:${getByteLength(item)}:"${item}";`
+    return `s:${getByteLength(item, options)}:"${item}";`
   }
   if (type === 'boolean') {
     return `b:${item ? '1' : '0'};`
@@ -44,7 +48,7 @@ export default function serialize(item: any, scope: Object = {}): string {
   if (typeof item.serialize === 'function') {
     const serialized = item.serialize()
     invariant(typeof serialized === 'string', `${item.constructor.name}.serialize should return a string`)
-    return `C:${constructorName.length}:"${constructorName}":${getByteLength(serialized)}:{${serialized}}`
+    return `C:${constructorName.length}:"${constructorName}":${getByteLength(serialized, options)}:{${serialized}}`
   }
   return `O:${constructorName.length}:"${constructorName}":${serializeObject(item, scope)}`
 }

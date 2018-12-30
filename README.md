@@ -36,8 +36,16 @@ const serializedForNamespace = Serialize.serialize(steel, {
 
 ```js
 class Serializable {
-  serialize(item: any, phpToJsScope: Object = {}): string
-  unserialize(item: string, scope: Object = {}, options: { strict: boolean } = { strict: false }): any
+  serialize(
+    item: any,
+    phpToJsScope: Object = {},
+    options: { encoding: 'utf8' | 'binary' } = { encoding: 'utf8' }
+  ): string
+  unserialize(
+    item: string,
+    scope: Object = {},
+    options: { strict: boolean, encoding: 'utf8' | 'binary' } = { strict: false, encoding: 'utf8' }
+  ): any
 }
 ```
 

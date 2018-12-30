@@ -1,5 +1,7 @@
 // @flow
 
+import type { Options } from './unserialize'
+
 export type ParserType =
   | 'null'
   | 'int'
@@ -24,9 +26,11 @@ const PARSER_TYPES: { [string]: ParserType } = {
 export default class Parser {
   index: number
   contents: Buffer
-  constructor(contents: Buffer, index: number) {
+  options: Options
+  constructor(contents: Buffer, index: number, options: Options) {
     this.contents = contents
     this.index = index
+    this.options = options
   }
   error(message: string = 'Syntax Error') {
     return new Error(`${message} at index ${this.index} while unserializing payload`)
@@ -47,7 +51,7 @@ export default class Parser {
     return this.readAhead(index - this.index)
   }
   peekAhead(index: number): string {
-    return this.contents.toString('utf8', this.index, this.index + index)
+    return this.contents.toString(this.options.encoding, this.index, this.index + index)
   }
   seekExpected(contents: string) {
     const slice = this.readAhead(contents.length)

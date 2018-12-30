@@ -8,9 +8,9 @@ export class __PHP_Incomplete_Class {
   }
 }
 
-export function getByteLength(contents: string): number {
+export function getByteLength(contents: string, options: Object): number {
   if (typeof Buffer !== 'undefined') {
-    return Buffer.byteLength(contents, 'utf8')
+    return Buffer.byteLength(contents, options.encoding)
   }
   return encodeURIComponent(contents).replace(/%[A-F\d]{2}/g, 'U').length
 }

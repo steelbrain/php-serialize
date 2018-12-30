@@ -6,6 +6,7 @@ import { isInteger, getClass, getIncompleteClass, __PHP_Incomplete_Class } from 
 
 export type Options = {|
   strict: boolean,
+  encoding: 'utf8' | 'binary',
 |}
 
 function getClassReference(className: string, scope: Object, strict: boolean): Object {
@@ -89,7 +90,10 @@ function unserialize(item: string | Buffer, scope: Object = {}, givenOptions: Ob
   if (typeof options.strict === 'undefined') {
     options.strict = true
   }
-  const parser = new Parser(Buffer.from(item), 0)
+  if (typeof options.encoding === 'undefined') {
+    options.encoding = 'utf8'
+  }
+  const parser = new Parser(Buffer.from(item), 0, options)
   return unserializeItem(parser, scope, options)
 }
 
