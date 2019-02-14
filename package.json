@@ -27,7 +27,7 @@
     "@babel/preset-flow": "^7.0.0",
     "ava": "^1.0.1",
     "eslint-config-steelbrain": "^6.0.0",
-    "flow-bin": "^0.91.0",
+    "flow-bin": "^0.93.0",
     "sb-babel-cli": "^1.0.4"
   },
   "dependencies": {}
