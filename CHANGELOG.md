@@ -1,3 +1,8 @@
+## 3.0.0
+
+- Require at least Node v8
+- Add `isSerialized` method, mirrored from Wordpress source
+
 ## 2.1.0
 
 - Add support for `encoding` parameter for serialize/unserialize
