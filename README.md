@@ -1,8 +1,5 @@
 # PHP-Serialize
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/steelbrain/php-serialize.svg)](https://greenkeeper.io/)
-PHP-Serialize is node library that helpers you encode/decoded data in PHP's Serialization format.
-
 It also supports `Serializable` objects decode. Here's how you can use them.
 
 ```js

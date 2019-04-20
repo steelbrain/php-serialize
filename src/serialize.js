@@ -8,6 +8,7 @@ function getClassNamespace(item: any, scope: Object) {
     Object.keys(scope).find(key => item instanceof scope[key]) || item.__PHP_Incomplete_Class_Name || item.constructor.name
   )
 }
+
 function serializeObject(item: Object, scope: Object): string {
   const processed = Array.isArray(item)
     ? item.map((value, index) => `${serialize(index, scope)}${serialize(value, scope)}`)

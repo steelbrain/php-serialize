@@ -22,13 +22,13 @@
   },
   "homepage": "https://github.com/steelbrain/php-serialize#readme",
   "devDependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/preset-env": "^7.2.3",
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
     "@babel/preset-flow": "^7.0.0",
     "ava": "^1.0.1",
     "eslint-config-steelbrain": "^7.0.0",
-    "flow-bin": "^0.91.0",
-    "sb-babel-cli": "^1.0.4"
+    "flow-bin": "^0.97.0",
+    "sb-babel-cli": "^2.0.0"
   },
   "dependencies": {}
 }
