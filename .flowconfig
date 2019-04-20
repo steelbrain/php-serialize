@@ -10,6 +10,7 @@ sketchy-null-bool=warn
 sketchy-null-string=warn
 unclear-type=warn
 untyped-import=off
+dynamic-export=off
 
 [options]
 

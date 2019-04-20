@@ -1,6 +1,8 @@
 // @flow
 
 import invariant from 'assert'
+// Disabling because that file only requires a type exported from this file
+// eslint-disable-next-line import/no-cycle
 import Parser from './parser'
 import { isInteger, getClass, getIncompleteClass, __PHP_Incomplete_Class } from './helpers'
 
