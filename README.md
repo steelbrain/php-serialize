@@ -46,6 +46,10 @@ class Serializable {
     scope: Object = {},
     options: { strict: boolean, encoding: 'utf8' | 'binary' } = { strict: false, encoding: 'utf8' }
   ): any
+  isSerialized(
+    item: any,
+    strict: false
+  ): boolean
 }
 ```
 
