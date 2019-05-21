@@ -3,6 +3,7 @@
   "version": "3.0.0",
   "description": "PHP serialize/unserialize in Javascript",
   "main": "lib/index.js",
+  "typings": "index.d.ts",
   "scripts": {
     "test": "ava spec/*-spec.js",
     "test:update-php-output": "php spec/serialize.php > spec/serialize.php.out",
