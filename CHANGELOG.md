@@ -1,3 +1,7 @@
+## 3.0.1
+
+- Fix handling of shallow arrays (Thanks @neoaggelos)
+
 ## 3.0.0
 
 - Require at least Node v8
