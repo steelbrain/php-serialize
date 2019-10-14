@@ -43,7 +43,14 @@ function serializeForTests() {
   debug(new DeepUser(), {
     'Deep\\User': DeepUser,
   })
-  debug((() => {let arr = []; arr[0] = 'shallow'; arr[4] = 'array'; return arr})());
+  debug(
+    (() => {
+      const arr = []
+      arr[0] = 'shallow'
+      arr[4] = 'array'
+      return arr
+    })(),
+  )
 
   return items
 }
