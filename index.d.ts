@@ -4,12 +4,13 @@ declare namespace Serializable {
   interface SerializeOption {
     encoding?: 'utf8' | 'binary'
   }
-  export function serialize(item: any, scope?: Record<any, any>, options?: SerializeOption): string
+  export function serialize(item: any, scope?: Record<string, any>, options?: SerializeOption): string
 
   interface UnserializeOption extends SerializeOption {
     strict?: boolean
   }
-  export function unserialize (item: string | Buffer, scope?: Record<any, any>, options?: UnserializeOption): any
+
+  export function unserialize(item: string | Buffer, scope?: Record<string, any>, options?: UnserializeOption): any
 
   /**
    * Check value to find if it was serialized.

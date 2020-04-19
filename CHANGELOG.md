@@ -1,3 +1,7 @@
+### Upcoming
+
+- Add TS Typings - Thanks [@vace](https://github.com/vace)
+
 ## 3.0.1
 
 - Fix handling of shallow arrays (Thanks @neoaggelos)
