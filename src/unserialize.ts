@@ -70,8 +70,19 @@ function unserializeItem(parser: Parser, scope: Record<string, any>, options: Op
     parser.seekExpected(':')
     const pairs = parser.getByLength('{', '}', length => unserializePairs(parser, length, scope, options))
     const result = getClassReference(name, scope, options.strict)
+
+    const PREFIX_PRIVATE = `\u0000${name}\u0000`
+    const PREFIX_PROTECTED = `\u0000*\u0000`
     pairs.forEach(({ key, value }) => {
-      result[key] = value
+      if (key.startsWith(PREFIX_PRIVATE)) {
+        // Private field
+        result[key.slice(PREFIX_PRIVATE.length)] = value
+      } else if (key.startsWith(PREFIX_PROTECTED)) {
+        // Protected field
+        result[key.slice(PREFIX_PROTECTED.length)] = value
+      } else {
+        result[key] = value
+      }
     })
     return result
   }

@@ -3,6 +3,7 @@
 - Add TS Typings - Thanks [@vace](https://github.com/vace)
 - Convert arrays with missing keys to objects in unserialize
 - **BREAKING** Export modules in CJS and CommonJS.
+- Add support for parsing protected and private fields
 
 ## 3.0.1
 

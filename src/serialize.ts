@@ -11,7 +11,8 @@ function serializeObject(item: any, scope: Record<string, any>): string {
   const processed = Array.isArray(item)
     ? item.map((value, index) => `${serialize(index, scope)}${serialize(value, scope)}`)
     : Object.keys(item).map(key => `${serialize(key, scope)}${serialize(item[key], scope)}`)
-  return `${processed.filter(entry => typeof entry !== 'undefined').length}:{${processed.join('')}}`
+  const { length } = processed.filter(entry => typeof entry !== 'undefined')
+  return `${length}:{${processed.join('')}}`
 }
 
 export default function serialize(
