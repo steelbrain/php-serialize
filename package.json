@@ -8,7 +8,7 @@
   "scripts": {
     "test": "ava",
     "test:update-php-output": "php spec/serialize.php > spec/serialize.php.out",
-    "lint": "(flow check) && (eslint . ) && (prettier --list-different src/*.js)",
+    "lint": "(tsc -p . --noEmit) && (eslint . ) && (prettier --list-different src/*.js)",
     "prepare": "yarn build:clean ; yarn build:esm ; yarn build:cjs ",
     "build:clean": "rm -rf lib",
     "build:esm": "tsc --module es2015 --target es5 --outDir lib/esm",
