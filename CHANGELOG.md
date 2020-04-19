@@ -1,3 +1,9 @@
+### Upcoming
+
+- Add TS Typings - Thanks [@vace](https://github.com/vace)
+- Convert arrays with missing keys to objects in unserialize
+- **BREAKING** Export modules in CJS and CommonJS.
+
 ## 3.0.1
 
 - Fix handling of shallow arrays (Thanks @neoaggelos)

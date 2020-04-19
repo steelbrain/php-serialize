@@ -3,7 +3,8 @@
 It also supports `Serializable` objects decode. Here's how you can use them.
 
 ```js
-const Serialize = require('php-serialize')
+import {serialize, unserialize} from 'php-serialize'
+
 class User {
   constructor({ name, age }) {
     this.name = name
@@ -19,11 +20,11 @@ class User {
   }
 }
 const steel = new User({ name: 'Steel Brain', age: 17 })
-const serialized = Serialize.serialize(steel)
-const unserialized = Serialize.unserialize(serialized, { User: User }) // Passing available classes
+const serialized = serialize(steel)
+const unserialized = unserialize(serialized, { User: User }) // Passing available classes
 console.log(unserialized instanceof User) // true
 
-const serializedForNamespace = Serialize.serialize(steel, {
+const serializedForNamespace = serialize(steel, {
   'MyApp\\User': User,
 })
 // ^ Above code will serialize User class to given name
@@ -32,22 +33,20 @@ const serializedForNamespace = Serialize.serialize(steel, {
 #### API
 
 ```js
-class Serializable {
-  serialize(
-    item: any,
-    phpToJsScope: Object = {},
-    options: { encoding: 'utf8' | 'binary' } = { encoding: 'utf8' }
-  ): string
-  unserialize(
-    item: string,
-    scope: Object = {},
-    options: { strict: boolean, encoding: 'utf8' | 'binary' } = { strict: false, encoding: 'utf8' }
-  ): any
-  isSerialized(
-    item: any,
-    strict: false
-  ): boolean
-}
+export function serialize(
+  item: any,
+  phpToJsScope: Object = {},
+  options: { encoding: 'utf8' | 'binary' } = { encoding: 'utf8' }
+): string
+export function unserialize(
+  item: string,
+  scope: Object = {},
+  options: { strict: boolean, encoding: 'utf8' | 'binary' } = { strict: false, encoding: 'utf8' }
+): any
+export function isSerialized(
+  item: any,
+  strict: false
+): boolean
 ```
 
 #### License

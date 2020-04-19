@@ -1,24 +1,26 @@
-// @flow
-
 import invariant from 'assert'
 import { isInteger, getByteLength } from './helpers'
 
-function getClassNamespace(item: any, scope: Object) {
+function getClassNamespace(item: any, scope: Record<string, any>) {
   return (
     Object.keys(scope).find(key => item instanceof scope[key]) || item.__PHP_Incomplete_Class_Name || item.constructor.name
   )
 }
 
-function serializeObject(item: Object, scope: Object): string {
+function serializeObject(item: any, scope: Record<string, any>): string {
   const processed = Array.isArray(item)
     ? item.map((value, index) => `${serialize(index, scope)}${serialize(value, scope)}`)
     : Object.keys(item).map(key => `${serialize(key, scope)}${serialize(item[key], scope)}`)
   return `${processed.filter(entry => typeof entry !== 'undefined').length}:{${processed.join('')}}`
 }
 
-export default function serialize(item: any, scope: Object = {}, givenOptions: Object = {}): string {
+export default function serialize(
+  item: any,
+  scope: Record<string, any> = {},
+  givenOptions: { encoding?: BufferEncoding } = {},
+): string {
   const type = typeof item
-  const options: any = Object.assign({}, givenOptions)
+  const options: any = { ...givenOptions }
   if (typeof options.encoding === 'undefined') {
     options.encoding = 'utf8'
   }

@@ -2,15 +2,17 @@
   "name": "php-serialize",
   "version": "3.0.1",
   "description": "PHP serialize/unserialize in Javascript",
-  "main": "lib/index.js",
-  "typings": "index.d.ts",
+  "main": "lib/cjs/index.js",
+  "typings": "src/index.ts",
+  "module": "lib/esm/index.js",
   "scripts": {
-    "test": "ava spec/*-spec.js",
+    "test": "ava",
     "test:update-php-output": "php spec/serialize.php > spec/serialize.php.out",
-    "lint": "(flow check) && (eslint . ) && (prettier --list-different src/*.js)",
-    "build": "sb-babel-cli src -o lib",
-    "watch": "npm run build -- -w",
-    "prepare": "npm run build"
+    "lint": "(tsc -p . --noEmit) && (eslint . --ext .ts) && (prettier --list-different src/*.ts)",
+    "prepare": "yarn build:clean ; yarn build:esm ; yarn build:cjs ",
+    "build:clean": "rm -rf lib",
+    "build:esm": "tsc --module es2015 --target es5 --outDir lib/esm",
+    "build:cjs": "tsc --module commonjs --target es5 --outDir lib/cjs"
   },
   "repository": {
     "type": "git",
@@ -21,17 +23,27 @@
   "bugs": {
     "url": "https://github.com/steelbrain/php-serialize/issues"
   },
+  "files": [
+    "src/*",
+    "lib/*"
+  ],
   "homepage": "https://github.com/steelbrain/php-serialize#readme",
   "devDependencies": {
-    "@babel/core": "^7.4.3",
-    "@babel/preset-env": "^7.4.3",
-    "@babel/preset-flow": "^7.0.0",
-    "ava": "^1.0.1",
-    "eslint-config-steelbrain": "^7.0.0",
-    "flow-bin": "^0.98.0",
-    "sb-babel-cli": "^2.0.0"
+    "ava": "^3.7.0",
+    "eslint-config-steelbrain": "^9.0.1",
+    "ts-node": "^8.8.2",
+    "typescript": "^3.8.3"
   },
   "dependencies": {},
+  "ava": {
+    "files": [
+      "test/*-test.ts"
+    ],
+    "extensions": ["ts"],
+    "require": [
+      "ts-node/register/transpile-only"
+    ]
+  },
   "engines": {
     "node": ">= 8"
   }

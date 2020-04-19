@@ -1,6 +1,6 @@
-'use babel'
+/* eslint-disable max-classes-per-file, class-methods-use-this */
 
-const { serialize } = require('..')
+import { serialize } from '..'
 
 function serializeForTests() {
   const items = []
@@ -14,6 +14,7 @@ function serializeForTests() {
     }
   }
   class TestTwo {
+    test: string
     constructor() {
       this.test = 'hi'
     }
@@ -55,4 +56,4 @@ function serializeForTests() {
   return items
 }
 
-module.exports = serializeForTests
+export default serializeForTests
