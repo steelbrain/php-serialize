@@ -4,9 +4,9 @@ import fs from 'fs'
 
 import serializeForTests from './serialize'
 
-test('serialize compat with php', async function(t) {
-  const givenOutput: string = await new Promise(function(resolve, reject) {
-    fs.readFile(path.join(__dirname, 'serialize.php.out'), 'utf8', function(error, result) {
+test('serialize compat with php', async t => {
+  const givenOutput: string = await new Promise((resolve, reject) => {
+    fs.readFile(path.join(__dirname, 'serialize.php.out'), 'utf8', (error, result) => {
       if (error) {
         reject(error)
       } else {

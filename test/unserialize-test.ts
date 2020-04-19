@@ -4,21 +4,19 @@ import test from 'ava'
 import { serialize, unserialize } from '..'
 
 function testWithOutput(message, callback) {
-  test(message, function(t) {
-    function testOutput(testSubject, scope) {
+  test(message, t => {
+    callback((testSubject, scope) => {
       const serialized = serialize(testSubject)
       const unserialized = unserialize(serialized, scope)
       if (testSubject !== null) {
         t.is(testSubject.constructor.name, unserialized.constructor.name)
       }
       t.deepEqual(unserialized, testSubject)
-    }
-
-    callback(t, testOutput)
+    })
   })
 }
 
-testWithOutput('it works well', function(t, testOutput) {
+testWithOutput('it works well', testOutput => {
   testOutput('Hey I am a very long string, this is to test if this package works with long strings, See #2')
   testOutput(1)
   testOutput(1.1)
@@ -31,7 +29,7 @@ testWithOutput('it works well', function(t, testOutput) {
   testOutput([])
   testOutput({ some: [] })
 })
-testWithOutput('it works well with serialiables too', function(t, testOutput) {
+testWithOutput('it works well with serialiables too', testOutput => {
   class User {
     name: string
     age: number
@@ -50,7 +48,7 @@ testWithOutput('it works well with serialiables too', function(t, testOutput) {
   }
   testOutput(new User(), { User })
 })
-testWithOutput('it works with non serializable classes too', function(t, testOutput) {
+testWithOutput('it works with non serializable classes too', testOutput => {
   class User {
     name: string
     age: number
@@ -61,7 +59,7 @@ testWithOutput('it works with non serializable classes too', function(t, testOut
   }
   testOutput(new User(), { User })
 })
-testWithOutput('it works with nested serializable classes too', function(t, testOutput) {
+testWithOutput('it works with nested serializable classes too', testOutput => {
   class ChildObject {
     name: string
     constructor(name) {
@@ -99,7 +97,7 @@ testWithOutput('it works with nested serializable classes too', function(t, test
   const SCOPE = { Parent, ChildObject, ChildClass }
   testOutput(new Parent(), SCOPE)
 })
-testWithOutput('it accepts serialiazable classes not available in scope when strict mode is off', function(t) {
+test('it accepts serialiazable classes not available in scope when strict mode is off', t => {
   const unserialized = unserialize(
     'C:10:"TestParent":50:{a:2:{i:0;C:4:"Test":3:{asd}i:1;O:7:"TestTwo":0:{}}}',
     {},
@@ -109,7 +107,7 @@ testWithOutput('it accepts serialiazable classes not available in scope when str
   t.is(unserialized.__PHP_Incomplete_Class_Name, 'TestParent')
   t.is(typeof unserialized.a, 'undefined')
 })
-testWithOutput('it accepts classes not available in scope when strict mode is off', function(t) {
+test('it accepts classes not available in scope when strict mode is off', t => {
   class TestParent {
     a: number
     constructor() {
@@ -122,11 +120,11 @@ testWithOutput('it accepts classes not available in scope when strict mode is of
   t.is(unserialized.__PHP_Incomplete_Class_Name, 'TestParent')
   t.is(unserialized.a, 10)
 })
-testWithOutput('it can work with multi-byte strings', function(t, testOutput) {
+testWithOutput('it can work with multi-byte strings', testOutput => {
   testOutput('你好世界')
   testOutput(['Helló', 'World'])
 })
-test('unserialize key pairs correctly, not serialized by self', function(t) {
+test('unserialize key pairs correctly, not serialized by self', t => {
   t.snapshot(unserialize(`a:1:{s:12:"97YEAY3JO237";s:2:"hi"}`))
   t.snapshot(unserialize(`a:1:{s:12:"02YJXTVI6ZOJ";s:2:"hi"}`))
   t.snapshot(unserialize(`a:1:{s:12:"X0YJXTVI6ZOJ";s:2:"hi"}`))
