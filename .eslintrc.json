@@ -8,5 +8,10 @@
     "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/no-inferrable-types": "off",
     "@typescript-eslint/member-delimiter-style": "off"
+  },
+  "settings": {
+    "react": {
+      "version": "16.0"
+    }
   }
 }
