@@ -1,6 +1,5 @@
-// @flow
-
-import type { Options } from './unserialize'
+// eslint-disable-next-line import/no-cycle
+import { Options } from './unserialize'
 
 export type ParserType =
   | 'null'
@@ -12,7 +11,7 @@ export type ParserType =
   | 'serializable-class'
   | 'notserializable-class'
 
-const PARSER_TYPES: { [string]: ParserType } = {
+const PARSER_TYPES: Record<string, ParserType> = {
   N: 'null',
   i: 'int',
   d: 'float',

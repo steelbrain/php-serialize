@@ -1,3 +1,5 @@
+/* eslint-disable max-classes-per-file, class-methods-use-this */
+
 import test from 'ava'
 import { serialize, unserialize } from '..'
 
@@ -31,6 +33,8 @@ testWithOutput('it works well', function(t, testOutput) {
 })
 testWithOutput('it works well with serialiables too', function(t, testOutput) {
   class User {
+    name: string
+    age: number
     constructor() {
       this.name = 'Steel Brain'
       this.age = 17
@@ -48,6 +52,8 @@ testWithOutput('it works well with serialiables too', function(t, testOutput) {
 })
 testWithOutput('it works with non serializable classes too', function(t, testOutput) {
   class User {
+    name: string
+    age: number
     constructor() {
       this.name = 'Steel Brain'
       this.age = 17
@@ -57,11 +63,13 @@ testWithOutput('it works with non serializable classes too', function(t, testOut
 })
 testWithOutput('it works with nested serializable classes too', function(t, testOutput) {
   class ChildObject {
+    name: string
     constructor(name) {
       this.name = name
     }
   }
   class ChildClass {
+    name: string
     constructor(name) {
       this.name = name
     }
@@ -73,6 +81,8 @@ testWithOutput('it works with nested serializable classes too', function(t, test
     }
   }
   class Parent {
+    propObj: ChildObject
+    propClass: ChildClass
     constructor() {
       this.propObj = new ChildObject('Steel')
       this.propClass = new ChildClass('Brain')
@@ -101,6 +111,7 @@ testWithOutput('it accepts serialiazable classes not available in scope when str
 })
 testWithOutput('it accepts classes not available in scope when strict mode is off', function(t) {
   class TestParent {
+    a: number
     constructor() {
       this.a = 10
     }

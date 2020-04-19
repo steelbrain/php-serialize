@@ -1,18 +1,15 @@
-// @flow
-
 import invariant from 'assert'
-// Disabling because that file only requires a type exported from this file
 // eslint-disable-next-line import/no-cycle
 import Parser from './parser'
 import { isInteger, getClass, getIncompleteClass, __PHP_Incomplete_Class } from './helpers'
 
-export type Options = {|
-  strict: boolean,
-  encoding: 'utf8' | 'binary',
-|}
+export type Options = {
+  strict: boolean
+  encoding: BufferEncoding
+}
 
-function getClassReference(className: string, scope: Object, strict: boolean): Object {
-  let container
+function getClassReference(className: string, scope: Record<string, any>, strict: boolean): any {
+  let container: any
   const classReference = scope[className]
   invariant(classReference || !strict, `Class ${className} not found in given scope`)
   if (classReference) {
@@ -23,8 +20,13 @@ function getClassReference(className: string, scope: Object, strict: boolean): O
   return container
 }
 
-function unserializePairs(parser: Parser, length: number, scope: Object, options: Options) {
-  const pairs = []
+function unserializePairs(
+  parser: Parser,
+  length: number,
+  scope: Record<string, any>,
+  options: Options,
+): { key: any; value: any }[] {
+  const pairs: ReturnType<typeof unserializePairs> = []
   for (let i = 0; i < length; i += 1) {
     const key = unserializeItem(parser, scope, options)
     parser.seekExpected(';')
@@ -37,7 +39,7 @@ function unserializePairs(parser: Parser, length: number, scope: Object, options
   return pairs
 }
 
-function unserializeItem(parser: Parser, scope: Object, options: Options) {
+function unserializeItem(parser: Parser, scope: Record<string, any>, options: Options): any {
   const type = parser.getType()
   if (type === 'null') {
     return null
@@ -58,7 +60,7 @@ function unserializeItem(parser: Parser, scope: Object, options: Options) {
 
     const isArray = pairs.every(item => isInteger(item.key))
     const result = isArray ? [] : {}
-    pairs.forEach(function({ key, value }: Object) {
+    pairs.forEach(({ key, value }) => {
       result[key] = value
     })
     return result
@@ -68,7 +70,7 @@ function unserializeItem(parser: Parser, scope: Object, options: Options) {
     parser.seekExpected(':')
     const pairs = parser.getByLength('{', '}', length => unserializePairs(parser, length, scope, options))
     const result = getClassReference(name, scope, options.strict)
-    pairs.forEach(function({ key, value }: Object) {
+    pairs.forEach(({ key, value }) => {
       result[key] = value
     })
     return result
@@ -87,8 +89,8 @@ function unserializeItem(parser: Parser, scope: Object, options: Options) {
   throw new Error(`Invalid type '${type}' encounterd while unserializing`)
 }
 
-function unserialize(item: string | Buffer, scope: Object = {}, givenOptions: Object = {}): any {
-  const options: any = Object.assign({}, givenOptions)
+function unserialize(item: string | Buffer, scope: Record<string, any> = {}, givenOptions: Partial<Options> = {}): any {
+  const options: any = { ...givenOptions }
   if (typeof options.strict === 'undefined') {
     options.strict = true
   }

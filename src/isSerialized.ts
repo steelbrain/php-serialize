@@ -1,5 +1,3 @@
-// @flow
-
 /**
  * Check value to find if it was serialized.
  * @param { string } item - Value to check to see if was serialized.
