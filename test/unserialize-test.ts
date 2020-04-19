@@ -135,3 +135,10 @@ test('unserialize key pairs correctly, not serialized by self', function(t) {
   t.snapshot(unserialize(`a:1:{s:2:"0x";s:2:"hi"}`))
   t.snapshot(unserialize(`a:1:{s:2:"0N";s:2:"hi"}`))
 })
+test('converts arrays with missing keys to objects', t => {
+  const unserialized = unserialize('a:2:{i:25;i:105;i:31;i:106;}')
+  t.deepEqual(unserialized, {
+    25: 105,
+    31: 106,
+  })
+})

@@ -58,7 +58,7 @@ function unserializeItem(parser: Parser, scope: Record<string, any>, options: Op
   if (type === 'array-object') {
     const pairs = parser.getByLength('{', '}', length => unserializePairs(parser, length, scope, options))
 
-    const isArray = pairs.every(item => isInteger(item.key))
+    const isArray = pairs.every((item, idx) => isInteger(item.key) && idx === item.key)
     const result = isArray ? [] : {}
     pairs.forEach(({ key, value }) => {
       result[key] = value
