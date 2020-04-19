@@ -1,4 +1,4 @@
-### Upcoming
+### 4.0.0
 
 - Add TS Typings - Thanks [@vace](https://github.com/vace)
 - Convert arrays with missing keys to objects in unserialize
