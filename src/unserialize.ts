@@ -13,6 +13,7 @@ function getClassReference(className: string, scope: Record<string, any>, strict
   const classReference = scope[className]
   invariant(classReference || !strict, `Class ${className} not found in given scope`)
   if (classReference) {
+    // @ts-ignore
     container = new (getClass(classReference.prototype))()
   } else {
     container = getIncompleteClass(className)
@@ -53,10 +54,10 @@ function unserializeItem(parser: Parser, scope: Record<string, any>, options: Op
     return value === '1'
   }
   if (type === 'string') {
-    return parser.getByLength('"', '"', length => parser.readAhead(length))
+    return parser.getByLength('"', '"', (length) => parser.readAhead(length))
   }
   if (type === 'array-object') {
-    const pairs = parser.getByLength('{', '}', length => unserializePairs(parser, length, scope, options))
+    const pairs = parser.getByLength('{', '}', (length) => unserializePairs(parser, length, scope, options))
 
     const isArray = pairs.every((item, idx) => isInteger(item.key) && idx === item.key)
     const result = isArray ? [] : {}
@@ -66,9 +67,9 @@ function unserializeItem(parser: Parser, scope: Record<string, any>, options: Op
     return result
   }
   if (type === 'notserializable-class') {
-    const name = parser.getByLength('"', '"', length => parser.readAhead(length))
+    const name = parser.getByLength('"', '"', (length) => parser.readAhead(length))
     parser.seekExpected(':')
-    const pairs = parser.getByLength('{', '}', length => unserializePairs(parser, length, scope, options))
+    const pairs = parser.getByLength('{', '}', (length) => unserializePairs(parser, length, scope, options))
     const result = getClassReference(name, scope, options.strict)
 
     const PREFIX_PRIVATE = `\u0000${name}\u0000`
@@ -87,9 +88,9 @@ function unserializeItem(parser: Parser, scope: Record<string, any>, options: Op
     return result
   }
   if (type === 'serializable-class') {
-    const name = parser.getByLength('"', '"', length => parser.readAhead(length))
+    const name = parser.getByLength('"', '"', (length) => parser.readAhead(length))
     parser.seekExpected(':')
-    const payload = parser.getByLength('{', '}', length => parser.readAhead(length))
+    const payload = parser.getByLength('{', '}', (length) => parser.readAhead(length))
     const result = getClassReference(name, scope, options.strict)
     if (!(result instanceof __PHP_Incomplete_Class)) {
       invariant(result.unserialize, `unserialize not found on class when processing '${name}'`)

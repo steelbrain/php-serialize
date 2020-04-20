@@ -1,3 +1,7 @@
+### 4.0.1
+
+- Emit declarations for typings, instead of using source
+
 ### 4.0.0
 
 - Add TS Typings - Thanks [@vace](https://github.com/vace)

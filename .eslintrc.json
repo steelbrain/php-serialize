@@ -2,6 +2,7 @@
   "extends": "steelbrain",
   "rules": {
     "camelcase": "warn",
+    "prettier/prettier": "off",
     "no-underscore-dangle": "off",
     "no-use-before-define": "off",
     "import/extensions": "off",
