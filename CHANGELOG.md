@@ -1,3 +1,7 @@
+### 4.0.2
+
+- Workaround an npm publish issue
+
 ### 4.0.1
 
 - Emit declarations for typings, instead of using source

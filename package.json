@@ -1,6 +1,6 @@
 {
   "name": "php-serialize",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "PHP serialize/unserialize in Javascript",
   "main": "lib/cjs/index.js",
   "typings": "lib/typings/index.d.ts",
