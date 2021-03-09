@@ -10,6 +10,7 @@ export type ParserType =
   | 'array-object'
   | 'serializable-class'
   | 'notserializable-class'
+  | 'recursion'
 
 const PARSER_TYPES: Record<string, ParserType> = {
   N: 'null',
@@ -20,6 +21,8 @@ const PARSER_TYPES: Record<string, ParserType> = {
   a: 'array-object',
   C: 'serializable-class',
   O: 'notserializable-class',
+  r: 'recursion',
+  R: 'recursion'
 }
 
 export default class Parser {
