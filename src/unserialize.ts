@@ -98,6 +98,13 @@ function unserializeItem(parser: Parser, scope: Record<string, any>, options: Op
     }
     return result
   }
+  if (type == 'recursion') {
+    const value = parser.readUntil(';')
+    if (value !== '1') {
+      throw new Error(`Did not expect value ${value} while parsing recursion token`);
+    }
+    return '*RECURSION*';
+  }
   throw new Error(`Invalid type '${type}' encounterd while unserializing`)
 }
 
