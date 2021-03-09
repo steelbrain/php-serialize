@@ -21,7 +21,8 @@ const PARSER_TYPES: Record<string, ParserType> = {
   a: 'array-object',
   C: 'serializable-class',
   O: 'notserializable-class',
-  r: 'recursion'
+  r: 'recursion',
+  R: 'recursion'
 }
 
 export default class Parser {
