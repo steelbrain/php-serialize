@@ -1,4 +1,5 @@
 import { isInteger, getByteLength } from './helpers'
+import { isInteger, getByteLength } from './helpers'
 
 function getClassNamespace(item: any, scope: Record<string, any>) {
   return (
