@@ -52,6 +52,7 @@ function serializeForTests() {
       return arr
     })(),
   )
+  debug(new Map([[1, 'q']]))
 
   return items
 }
