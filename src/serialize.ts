@@ -48,6 +48,12 @@ export default function serialize(
     return `a:${serializeObject(item, scope)}`
   }
 
+  if (item instanceof Map) {
+    return `a:${item.size}:{` + Array.from(item.entries()).map(([value, key]) => {
+      return `${serialize(value, scope)}${serialize(key, scope)}`
+    }) + '}'
+  }
+
   const constructorName = getClassNamespace(item, scope)
   if (typeof item.serialize === 'function') {
     const serialized = item.serialize()
