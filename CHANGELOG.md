@@ -1,3 +1,7 @@
+### 4.1.0
+
+- Add support for JS `Map`s as equivalent for unordered PHP objects (Thanks @trim21)
+
 ### 4.0.2
 
 - Workaround an npm publish issue
