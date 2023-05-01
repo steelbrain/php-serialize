@@ -49,8 +49,8 @@ export default function serialize(
   }
 
   if (item instanceof Map) {
-    return `a:${item.size}:{${Array.from(item.entries()).map(([value, key]) => {
-      return `${serialize(value, scope)}${serialize(key, scope)}`
+    return `a:${item.size}:{${Array.from(item.entries()).map(([key, value]) => {
+      return `${serialize(key, scope)}${serialize(value, scope)}`
     })}}`
   }
 
