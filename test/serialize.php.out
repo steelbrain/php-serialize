@@ -16,3 +16,4 @@ C:10:"TestParent":70:{a:2:{i:0;C:4:"Test":3:{asd}i:1;O:7:"TestTwo":1:{s:4:"test"
 O:9:"Deep\User":0:{}
 a:2:{i:0;s:7:"shallow";i:4;s:5:"array";}
 a:1:{i:1;s:1:"q";}
+a:2:{i:1;s:1:"1";i:2;s:1:"2";}

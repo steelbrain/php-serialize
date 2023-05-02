@@ -51,7 +51,7 @@ export default function serialize(
   if (item instanceof Map) {
     return `a:${item.size}:{${Array.from(item.entries()).map(([key, value]) => {
       return `${serialize(key, scope)}${serialize(value, scope)}`
-    })}}`
+    }).join('')}}`
   }
 
   const constructorName = getClassNamespace(item, scope)
