@@ -44,3 +44,4 @@ debug(new TestParent());
 require('serialize-namespaces.php');
 debug(array(0 => "shallow", 4 => "array"));
 debug(array(1 => "q"));
+debug(array(1 => "1", 2 => "2"));
