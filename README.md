@@ -2,6 +2,15 @@
 
 It also supports `Serializable` objects decode. Here's how you can use them.
 
+#### Installation
+
+```sh
+$ npm install php-serialize # If you're using npm
+$ yarn add php-serialize # If you're using Yarn
+```
+
+#### Usage
+
 ```js
 import {serialize, unserialize} from 'php-serialize'
 
