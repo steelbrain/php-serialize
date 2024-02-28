@@ -6,6 +6,8 @@ import { isInteger, getClass, getIncompleteClass, __PHP_Incomplete_Class } from 
 export type Options = {
   strict: boolean
   encoding: BufferEncoding
+  /** Preserves the order of PHP arrays as Map in JS. Otherwise Object is retunred. Defaults to true. */
+  preserveOrder: boolean
 }
 
 function getClassReference(className: string, scope: Record<string, any>, strict: boolean): any {
@@ -60,11 +62,14 @@ function unserializeItem(parser: Parser, scope: Record<string, any>, options: Op
     const pairs = parser.getByLength('{', '}', length => unserializePairs(parser, length, scope, options))
 
     const isArray = pairs.every((item, idx) => isInteger(item.key) && idx === item.key)
-    const result = isArray ? [] : {}
-    pairs.forEach(({ key, value }) => {
-      result[key] = value
-    })
-    return result
+    if (isArray) {
+      return pairs.map(({ value }) => value)
+    }
+    if (options.preserveOrder) {
+      return new Map(pairs.map(({ key, value }) => [key, value]))
+    }
+
+    return pairs.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
   }
   if (type === 'notserializable-class') {
     const name = parser.getByLength('"', '"', length => parser.readAhead(length))
@@ -108,6 +113,9 @@ function unserialize(item: string | Buffer, scope: Record<string, any> = {}, giv
   }
   if (typeof options.encoding === 'undefined') {
     options.encoding = 'utf8'
+  }
+  if (typeof options.preserveOrder === 'undefined') {
+    options.preserveOrder = true
   }
   const parser = new Parser(Buffer.from(item), 0, options)
   return unserializeItem(parser, scope, options)
