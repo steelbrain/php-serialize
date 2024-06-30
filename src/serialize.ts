@@ -1,5 +1,4 @@
-import invariant from 'assert'
-import { isInteger, getByteLength } from './helpers'
+import { isInteger, getByteLength, invariant } from './helpers'
 
 function getClassNamespace(item: any, scope: Record<string, any>) {
   return (

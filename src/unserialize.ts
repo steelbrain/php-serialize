@@ -1,7 +1,6 @@
-import invariant from 'assert'
 // eslint-disable-next-line import/no-cycle
 import Parser from './parser'
-import { isInteger, getClass, getIncompleteClass, __PHP_Incomplete_Class } from './helpers'
+import { isInteger, getClass, getIncompleteClass, __PHP_Incomplete_Class, invariant } from './helpers'
 
 export type Options = {
   strict: boolean
