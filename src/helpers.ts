@@ -30,3 +30,14 @@ export function getClass(prototype: Record<string, any>) {
   PhpClass.prototype = prototype
   return PhpClass
 }
+
+/**
+ * Ensures that the given {@link value} is truthy, throws an {@link Error} otherwise.
+ * @param value the value to check to be truthy.
+ * @param message the message of the {@link Error} if the value is falsy.
+ */
+export function invariant(value: any, message?: string) {
+  if (!value) {
+    throw new Error(message)
+  }
+}
