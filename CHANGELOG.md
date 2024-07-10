@@ -1,3 +1,10 @@
+### 5
+
+- Remove dependence on `assert` native module for validation, and use simple error instead (Thanks @eliandoran)
+
+  Because this changes the error class from `AssertionError` to `Error` which might break downstream code,
+  this is being tagged as semver-major.
+
 ### 4.1.1
 
 - Fix `Map` support for multiple elements (Thanks @trim21)
