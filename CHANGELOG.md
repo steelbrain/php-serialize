@@ -1,4 +1,4 @@
-### 5
+### 5.0.0
 
 - Remove dependence on `assert` native module for validation, and use simple error instead (Thanks @eliandoran)
 
