@@ -3,7 +3,7 @@
  * @param { string } item - Value to check to see if was serialized.
  * @param { boolean } strict - Whether to be strict about the end of the string. Default value: false
  */
-export default function isSerialized(givenItem: string, strict: boolean = false) {
+export default function isSerialized(givenItem: string, strict = false) {
   if (typeof givenItem !== 'string') {
     return false
   }
@@ -53,6 +53,7 @@ export default function isSerialized(givenItem: string, strict: boolean = false)
       } else if (item.indexOf('"') === -1) {
         return false
       }
+      break
 
     // or else fall through
 

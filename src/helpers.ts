@@ -16,7 +16,7 @@ export function getByteLength(contents: string, options: { encoding: BufferEncod
 
 // isInteger = is NOT a float but still a number
 export function isInteger(value: any): boolean {
-  return typeof value === 'number' && parseInt(value.toString(), 10) === value
+  return typeof value === 'number' && Number.parseInt(value.toString(), 10) === value
 }
 
 export function getIncompleteClass(name: string) {

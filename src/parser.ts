@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-cycle
-import { Options } from './unserialize'
+import type { Options } from './unserialize'
 
 export type ParserType =
   | 'null'
@@ -31,7 +31,7 @@ export default class Parser {
     this.index = index
     this.options = options
   }
-  error(message: string = 'Syntax Error') {
+  error(message = 'Syntax Error') {
     return new Error(`${message} at index ${this.index} while unserializing payload`)
   }
   advance(index: number) {
@@ -72,7 +72,7 @@ export default class Parser {
     return parserType
   }
   getLength(): number {
-    const length = parseInt(this.readUntil(':'), 10)
+    const length = Number.parseInt(this.readUntil(':'), 10)
     if (Number.isNaN(length)) {
       throw this.error()
     }
