@@ -46,6 +46,8 @@ export default function isSerialized(givenItem: string, strict = false) {
 
   switch (token) {
     case 's':
+    case 'a':
+    case 'O':
       if (strict) {
         if (item.substr(-2, 1) !== '"') {
           return false
@@ -53,12 +55,7 @@ export default function isSerialized(givenItem: string, strict = false) {
       } else if (item.indexOf('"') === -1) {
         return false
       }
-      break
 
-    // or else fall through
-
-    case 'a':
-    case 'O':
       return item.match(new RegExp(`^${token}:[0-9]+:`, 's')) !== null
 
     case 'b':
