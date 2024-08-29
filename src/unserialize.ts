@@ -97,6 +97,10 @@ function unserializeItem(parser: Parser, scope: Record<string, any>, options: Op
     }
     return result
   }
+  if (type == 'recursion') {
+    const value = parser.readUntil(';')
+    return `*RECURSION* reference #${value}`;
+  }
   throw new Error(`Invalid type '${type}' encounterd while unserializing`)
 }
 
