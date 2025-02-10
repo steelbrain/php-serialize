@@ -1,4 +1,5 @@
 // eslint-disable-next-line import/no-cycle
+/* global BigInt */
 import Parser from './parser'
 import { isInteger, getClass, getIncompleteClass, __PHP_Incomplete_Class, invariant } from './helpers'
 
@@ -46,7 +47,11 @@ function unserializeItem(parser: Parser, scope: Record<string, any>, options: Op
   }
   if (type === 'int' || type === 'float') {
     const value = parser.readUntil(';')
-    return type === 'int' ? parseInt(value, 10) : parseFloat(value)
+    let parsedValue: number | BigInt = type === 'int' ? parseInt(value, 10) : parseFloat(value)
+    if (parsedValue.toString() !== value) {
+      parsedValue = BigInt(value) as BigInt
+    }
+    return parsedValue
   }
   if (type === 'boolean') {
     const value = parser.readAhead(1)
