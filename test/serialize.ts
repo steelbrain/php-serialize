@@ -54,6 +54,7 @@ function serializeForTests() {
   )
   debug(new Map([[1, 'q']]))
   debug(new Map([[1, '1'], [2, '2']]))
+  debug(9007199254740999n)
 
   return items
 }

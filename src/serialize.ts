@@ -28,8 +28,8 @@ export default function serialize(
   if (item === null) {
     return 'N;'
   }
-  if (type === 'number') {
-    if (isInteger(item)) {
+  if (type === 'number' || type === 'bigint') {
+    if (typeof item === 'bigint' || isInteger(item)) {
       return `i:${item};`
     }
     return `d:${item.toString().toUpperCase()};`

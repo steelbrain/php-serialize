@@ -45,3 +45,4 @@ require('serialize-namespaces.php');
 debug(array(0 => "shallow", 4 => "array"));
 debug(array(1 => "q"));
 debug(array(1 => "1", 2 => "2"));
+debug(9007199254740999); // bigint
