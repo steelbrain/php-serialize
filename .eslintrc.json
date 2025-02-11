@@ -1,5 +1,8 @@
 {
   "extends": "steelbrain",
+  "globals": {
+    "BigInt": true
+  },
   "rules": {
     "camelcase": "warn",
     "prettier/prettier": "off",
