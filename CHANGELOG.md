@@ -1,3 +1,7 @@
+### 5.1.0
+
+- Add support for `BigInt` (Thanks @at0mat)
+
 ### 5.0.1
 
 - Fix a bug in `isSerialized` (Thanks @maxbronnikov10)
