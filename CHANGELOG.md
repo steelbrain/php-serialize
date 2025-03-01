@@ -1,3 +1,7 @@
+### 5.1.1
+
+- Fix parsing conflict between floats and BigInt (Thanks @dev-airmaxx)
+
 ### 5.1.0
 
 - Add support for `BigInt` (Thanks @at0mat)
