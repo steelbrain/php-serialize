@@ -1,6 +1,10 @@
-### 5.1.1
+### 5.1.2
 
 - Fix parsing conflict between floats and BigInt (Thanks @dev-airmaxx)
+
+### 5.1.1
+
+- Mistakenly republished 5.1.0 as 5.1.1
 
 ### 5.1.0
 
