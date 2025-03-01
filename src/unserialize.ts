@@ -47,13 +47,15 @@ function unserializeItem(parser: Parser, scope: Record<string, any>, options: Op
   if (type === 'int' || type === 'float') {
     const value = parser.readUntil(';')
     let parsedValue: number | BigInt = type === 'int' ? parseInt(value, 10) : parseFloat(value)
-    if (type === 'int') {
+
+    if (parsedValue.toString() !== value) {
       if (!value.includes('.')) {
         parsedValue = BigInt(value); // Only convert to BigInt if there's no decimal
       } else {
         parsedValue = parseFloat(value); // Ensure floats remain as float
       }
     }
+
     return parsedValue
   }
   if (type === 'boolean') {
