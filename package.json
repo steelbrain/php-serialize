@@ -27,7 +27,7 @@
   "files": [
     "lib/*"
   ],
-  "homepage": "https://github.com/steelbrain/php-serialize#readme",
+  "homepage": "https://php-serialize.com",
   "devDependencies": {
     "ava": "^3.7.0",
     "eslint-config-steelbrain": "^9.0.1",
