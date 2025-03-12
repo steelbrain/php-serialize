@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="128" fill="#4F46E5"/>
+  
+  <!-- Serialization Symbol (Two Connected Brackets) -->
+  <path d="M180 140 C140 140 140 256 140 256 C140 256 140 372 180 372" 
+        stroke="white" stroke-width="48" stroke-linecap="round"/>
+  <path d="M332 140 C372 140 372 256 372 256 C372 256 372 372 332 372" 
+        stroke="white" stroke-width="48" stroke-linecap="round"/>
+  
+  <!-- Connection Line -->
+  <line x1="180" y1="256" x2="332" y2="256" 
+        stroke="white" stroke-width="48" stroke-linecap="round"/>
+</svg>
