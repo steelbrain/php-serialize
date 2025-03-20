@@ -1,3 +1,7 @@
+### 5.1.3
+
+- Maintenance release with updated homepage in manifest
+
 ### 5.1.2
 
 - Fix parsing conflict between floats and BigInt (Thanks @dev-airmaxx)
