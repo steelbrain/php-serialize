@@ -19,6 +19,17 @@ export function isInteger(value: any): boolean {
   return typeof value === 'number' && Number.parseInt(value.toString(), 10) === value
 }
 
+export function isValidKey(key: any): [boolean, string] {
+  if (!(typeof key === 'string' || typeof key === 'number')) {
+    return [false, `Invalid key type '${typeof key}' encountered while unserializing`]
+  }
+  if (key === '__proto__') {
+    // Prevent prototype pollution
+    return [false, 'Key "__proto__" is not allowed']
+  }
+  return [true, '']
+}
+
 export function getIncompleteClass(name: string) {
   return new __PHP_Incomplete_Class(name)
 }

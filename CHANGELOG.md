@@ -1,3 +1,9 @@
+### Upcoming 
+
+- Unserialize bug/security fixes: (by @souvlakias)
+  - Ensures object keys are either `number` or `string`, and not equal to `__proto__`.
+  - Ensures serializable classes are not unserialized as `O:notserializable-class`.
+
 ### 5.1.3
 
 - Maintenance release with updated homepage in manifest
